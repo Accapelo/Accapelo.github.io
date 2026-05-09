@@ -101,8 +101,8 @@
         /* Portrait — fixed square above the bio */
         .diptych-portrait {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 400px;
+            height: 400px;
             flex-shrink: 0;
             overflow: hidden;
             margin-bottom: 32px;
@@ -759,89 +759,56 @@
         </div>
     </div>
 
-    <!-- Room 1: Chromatic Tides -->
-    <!-- <div class="room-wrapper" data-idx="1">
+    <!-- Room 1 -->
+    <div class="room-wrapper" data-idx="1">
         <div class="room-shell">
             <div class="room-body">
                 <div class="room-edge-l"></div>
                 <div class="room-edge-r"></div>
                 <div class="room-grid">
-                    <div class="paint-col">
-                        <canvas class="painting-canvas" id="canvas-1"></canvas>
-                        <div class="painting-placard">
-                            <div class="plaque-title">Chromatic Tides</div>
-                            <div class="plaque-meta">Tobias Eriksson &middot; 2026</div>
-                        </div>
-                    </div>
+                    <div class="paint-col"></div>
                     <div class="info-col" id="panel-1">
-                        <p class="info-eyebrow">The Atmospheric Series</p>
-                        <h2 class="info-title">Chromatic Tides</h2>
-                        <p class="info-year">2026 &middot; GLSL / WebGL &middot; Real-time</p>
-                        <div class="info-rule"></div>
-                        <p class="info-desc">The ocean as optical instrument. "Chromatic Tides" studies how light fractures across moving water, pulling the white spectrum into its constituent colors. Waves become prisms. The horizon oscillates between amber and violet. Vellum describes this work as a score for light, where the wave function determines both rhythm and pitch.</p>
-                        <button class="code-toggle" data-drawer="drawer-1"><span class="arrow">&#9654;</span> View GLSL Source</button>
-                        <div class="code-drawer" id="drawer-1"><pre id="pre-1"></pre></div>
+                        <p class="info-eyebrow">Coming Soon</p>
+                        <h2 class="info-title">To be added</h2>
                     </div>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
-    <!-- Room 2: Stellar Nursery -->
-    <!-- <div class="room-wrapper room-flip" data-idx="2">
+    <!-- Room 2 -->
+    <div class="room-wrapper room-flip" data-idx="2">
         <div class="room-shell">
             <div class="room-body">
                 <div class="room-edge-l"></div>
                 <div class="room-edge-r"></div>
                 <div class="room-grid">
-                    <div class="paint-col">
-                        <canvas class="painting-canvas" id="canvas-2"></canvas>
-                        <div class="painting-placard">
-                            <div class="plaque-title">Stellar Nursery</div>
-                            <div class="plaque-meta">Tobias Eriksson &middot; 2026</div>
-                        </div>
-                    </div>
+                    <div class="paint-col"></div>
                     <div class="info-col" id="panel-2">
-                        <p class="info-eyebrow">The Cosmological Series</p>
-                        <h2 class="info-title">Stellar Nursery</h2>
-                        <p class="info-year">2026 &middot; GLSL / WebGL &middot; Real-time</p>
-                        <div class="info-rule"></div>
-                        <p class="info-desc">Created in response to the first images from the James Webb Space Telescope. Fractal noise functions model the gas clouds; luminous pinpoints emerge from the mathematics like suns coalescing from primordial hydrogen. Time here operates at cosmological scale — one second of viewing equals ten thousand years of becoming.</p>
-                        <button class="code-toggle" data-drawer="drawer-2"><span class="arrow">&#9654;</span> View GLSL Source</button>
-                        <div class="code-drawer" id="drawer-2"><pre id="pre-2"></pre></div>
+                        <p class="info-eyebrow">Coming Soon</p>
+                        <h2 class="info-title">To be added</h2>
                     </div>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
-    <!-- Room 3: Geometric Reverie -->
-    <!-- <div class="room-wrapper" data-idx="3">
+    <!-- Room 3 -->
+    <div class="room-wrapper" data-idx="3">
         <div class="room-shell">
             <div class="room-body">
                 <div class="room-edge-l"></div>
                 <div class="room-edge-r"></div>
                 <div class="room-grid">
-                    <div class="paint-col">
-                        <canvas class="painting-canvas" id="canvas-3"></canvas>
-                        <div class="painting-placard">
-                            <div class="plaque-title">Geometric Reverie</div>
-                            <div class="plaque-meta">Tobias Eriksson &middot; 2026</div>
-                        </div>
-                    </div>
+                    <div class="paint-col"></div>
                     <div class="info-col" id="panel-3">
-                        <p class="info-eyebrow">The Geometric Series</p>
-                        <h2 class="info-title">Geometric Reverie</h2>
-                        <p class="info-year">2026 &middot; GLSL / WebGL &middot; Real-time</p>
-                        <div class="info-rule"></div>
-                        <p class="info-desc">The final work in Vellum's 2024 collection returns to pure form. Hexagonal tessellations rotate and interpenetrate according to harmonic frequencies — a visual music theory. The palette cycles through the full spectrum in slow waves, governed by a cosine function Vellum calls "the artist's heartbeat." This is mathematics in a state of reverie.</p>
-                        <button class="code-toggle" data-drawer="drawer-3"><span class="arrow">&#9654;</span> View GLSL Source</button>
-                        <div class="code-drawer" id="drawer-3"><pre id="pre-3"></pre></div>
+                        <p class="info-eyebrow">Coming Soon</p>
+                        <h2 class="info-title">To be added</h2>
                     </div>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
 </main>
 
@@ -1241,110 +1208,6 @@ void mainImage(out vec4 O,in vec2 g){
 
 void main(){mainImage(gl_FragColor,gl_FragCoord.xy);}
 `
-},
-{
-name:"Chromatic Tides",
-fs:`precision mediump float;
-uniform vec2 u_res;uniform float u_t;
-float wave(vec2 uv,float f,float s,float a,float ph){
-  return sin(uv.x*f+u_t*s+ph)*a;}
-void main(){
-  vec2 uv=gl_FragCoord.xy/u_res;
-  float t=u_t;float hz=.52;
-  if(uv.y>hz){
-    float sy=(uv.y-hz)/(1.-hz);
-    vec3 c=mix(vec3(.75,.42,.12),vec3(.08,.04,.22),sy);
-    float sx=.5+sin(t*.018)*.1;
-    float sd=length(uv-vec2(sx,hz+.12));
-    c+=vec3(1.,.9,.55)*exp(-sd*22.)*.9;
-    c+=vec3(1.,.55,.15)*exp(-sd*5.)*.35;
-    gl_FragColor=vec4(c,1);
-  } else {
-    float d=uv.y/hz;
-    float w1=wave(uv,7.,.85,.032,0.);
-    float w2=wave(uv,12.,-.52,.022,1.5);
-    float w3=wave(uv,20.,1.25,.012,3.);
-    float w4=wave(uv,4.6,.32,.044,.7);
-    float w5=wave(uv,31.,2.1,.006,5.2);
-    float tw=w1+w2+w3+w4+w5;
-    vec3 deep=vec3(.015,.07,.22),shal=vec3(.04,.30,.52),foam=vec3(.88,.94,1.);
-    vec3 wc=mix(deep,shal,d*.75+tw+.3);
-    wc.r+=tw*3.*.14;wc.b-=tw*3.*.07;
-    wc=mix(wc,foam,smoothstep(.038,.072,tw)*.5);
-    float sx=.5+sin(t*.018)*.1;
-    float refl=exp(-pow(uv.x-sx-tw*2.,2.)*18.);
-    wc+=vec3(1.,.8,.4)*refl*.14*d;
-    gl_FragColor=vec4(wc,1);
-  }
-}`
-},
-{
-name:"Stellar Nursery",
-fs:`precision mediump float;
-uniform vec2 u_res;uniform float u_t;
-float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
-return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
-float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<6;i++){v+=a*n(p);p*=2.1;a*=.48;}return v;}
-void main(){
-  vec2 uv=gl_FragCoord.xy/u_res;uv.x*=u_res.x/u_res.y;
-  float t=u_t*.038;
-  vec3 col=vec3(0.,0.,.018);
-  float n1=fbm(uv*2.6+vec2(t,t*.3));
-  float n2=fbm(uv*3.9-vec2(t*.65,t*.5));
-  float n3=fbm(uv*6.2+vec2(t*.38,-t*.75));
-  col+=vec3(.08,.18,.85)*pow(n1,1.6)*1.9;
-  col+=vec3(.48,.09,.72)*pow(n2,1.3)*1.5;
-  col+=vec3(.92,.38,.04)*pow(n3,2.1)*1.3;
-  col+=vec3(.0,.58,.48)*n1*n2*2.1;
-  float core=fbm(uv*4.2-t*.45);
-  col+=vec3(1.,.92,.72)*pow(core,4.5)*2.2;
-  vec2 su=uv*155.;vec2 sc=floor(su),sf=fract(su)-.5;
-  float sr=h(sc);
-  if(sr>.925){
-    float br=(sr-.925)*13.;
-    float tw=.7+.3*sin(u_t*(3.+h(sc+.5)*7.));
-    col+=mix(vec3(.72,.82,1.),vec3(1.,.92,.7),h(sc*2.3))*br*tw*exp(-length(sf)*26.);
-  }
-  col=col/(col+.5);col=pow(col,vec3(.84));
-  gl_FragColor=vec4(col,1);
-}`
-},
-{
-name:"Geometric Reverie",
-fs:`precision mediump float;
-uniform vec2 u_res;uniform float u_t;
-vec3 pal(float t){
-  return .5+.5*cos(6.2832*(vec3(0.,.33,.67)+t));}
-float sdHex(vec2 p,float r){p=abs(p);return max(dot(p,normalize(vec2(1.,1.732051))),p.x)-r;}
-mat2 rot(float a){return mat2(cos(a),-sin(a),sin(a),cos(a));}
-void main(){
-  vec2 uv=gl_FragCoord.xy/u_res;
-  uv=uv*2.-1.;uv.x*=u_res.x/u_res.y;
-  float t=u_t*.14;
-  vec3 col=vec3(0);
-  for(int i=0;i<4;i++){
-    float fi=float(i);
-    float sc=2.6+fi*1.9;
-    float dir=fi>1.5?-1.:1.;
-    vec2 p=rot(t*(1.+fi*.28)*dir)*uv*sc;
-    vec2 hc=round(p/vec2(1.,.866)*.5)*vec2(2.,1.732);
-    float hd=sdHex(p-hc,.94);
-    float edge=smoothstep(.05,.0,abs(hd)-.008);
-    float fill=smoothstep(0.,-.42,hd)*.14;
-    float ct=length(hc)*.09+t*.28+fi*.26;
-    col+=pal(ct)*(edge*.42+fill)/(fi+1.);
-  }
-  float r=length(uv),th=atan(uv.y,uv.x);
-  float segs=8.;
-  float sym=abs(mod(th/(3.14159/segs),2.)-1.);
-  float mand=sin(r*16.-t*3.)*.5+.5;
-  mand*=sin(sym*12.)*.5+.5;
-  mand*=exp(-r*1.6);
-  col+=pal(r-t*.18)*mand*1.6;
-  col*=1.3-smoothstep(.55,1.35,r);
-  gl_FragColor=vec4(col,1);
-}`
 }
 ];
 
@@ -1497,10 +1360,12 @@ function updateScroll() {
         const prog  = clamp01((scrollY - top) / range);
 
         // Info col: opacity 0→1, translateY 22px→0 over prog 0.05→0.30
-        const infoP = ease(clamp01((prog - 0.05) / 0.25));
-        const shift = mobile ? 12 : 22;
-        infoCols[i].style.opacity   = infoP.toFixed(4);
-        infoCols[i].style.transform = `translateY(${((1 - infoP) * shift).toFixed(2)}px)`;
+        if (infoCols[i]) {
+            const infoP = ease(clamp01((prog - 0.05) / 0.25));
+            const shift = mobile ? 12 : 22;
+            infoCols[i].style.opacity   = infoP.toFixed(4);
+            infoCols[i].style.transform = `translateY(${((1 - infoP) * shift).toFixed(2)}px)`;
+        }
 
         // 3. Progress dots active when prog 0.05→0.95
         if (prog > 0.05 && prog < 0.95) dotEls[i].classList.add('active');
