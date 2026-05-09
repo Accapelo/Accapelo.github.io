@@ -1,1 +1,1549 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Web site created using create-react-app"/><link rel="apple-touch-icon" href="/logo192.png"/><link rel="manifest" href="/manifest.json"/><title>React Redux App</title><script defer="defer" src="/static/js/main.ec4d8f8f.js"></script><link href="/static/css/main.bba07c2e.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accapelo.github.io</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #080706;
+            --gold: #c9a96e;
+            --gold-light: #e8cfa0;
+            --text: #f0ebe3;
+            --muted: #9a8f7e;
+            --wall: #ede8dc;
+            --ceiling: #ddd8cc;
+            --floor-top: #6a4820;
+            --floor-bot: #3a2008;
+            --ink: #1a1208;
+            --ink-mid: #524030;
+            --ink-label: #7a5820;
+            --ink-muted: #7a6048;
+        }
+
+        html { scroll-behavior: auto; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ── NAV ── */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 22px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+        }
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--ink-label);
+        }
+        .nav-links { display: flex; gap: 36px; list-style: none; }
+        .nav-links a {
+            color: var(--ink-mid);
+            text-decoration: none;
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--ink); }
+
+        /* ── ARTIST INTRO ROOM ── */
+        .artist-intro-wrapper {
+            height: 120vh;
+        }
+
+        .room-shell--intro {
+            background: #1c1410 !important;
+        }
+        .room-shell--intro .room-body {
+            align-items: stretch;
+        }
+        .room-shell--intro .room-body::before {
+            display: none;
+        }
+
+        /* Full-room diptych wrapper */
+        .artist-frame-wrap {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Centered single-column layout */
+        .artist-diptych {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 72px 24px 48px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(201,169,110,0.3) transparent;
+        }
+
+        /* Portrait — fixed square above the bio */
+        .diptych-portrait {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            flex-shrink: 0;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+        .diptych-portrait canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Bio panel — dark canvas tone, centered block */
+        .diptych-bio {
+            background: #1c1410;
+            padding: 28px 32px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(201,169,110,0.28);
+            width: min(620px, 100%);
+        }
+        .diptych-bio .info-eyebrow { color: var(--gold); margin-bottom: 10px; }
+        .diptych-bio .info-title   { color: #f0ebe3; font-size: 2.2rem; margin-bottom: 4px; }
+        .diptych-bio .info-year    { color: var(--muted); margin-bottom: 0; font-style: normal; }
+        .diptych-bio .info-rule    {
+            background: linear-gradient(to right, transparent, rgba(201,169,110,0.5), transparent);
+            margin: 14px 0;
+        }
+        .diptych-bio .info-desc  { color: #9a8f7e; font-size: 0.82rem; line-height: 1.82; margin-top: 10px; margin-bottom: 0px; }
+        .diptych-bio .info-desc em { color: var(--gold); font-style: italic; }
+
+        /* Skill tags inside diptych */
+        .bio-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 3px 0 14px;
+        }
+        .bio-skill {
+            font-size: 0.56rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gold);
+            border: 1px solid rgba(201,169,110,0.28);
+            padding: 3px 7px;
+        }
+
+        /* Certifications + Contact row */
+        .bio-lists-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 14px;
+        }
+        .bio-lists-row .bio-certs {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* Certifications list */
+        .bio-certs {
+            margin: 0 0 14px;
+            padding: 0;
+            list-style: none;
+        }
+        .bio-certs li {
+            font-size: 0.72rem;
+            color: #9a8f7e;
+            padding: 3px 0;
+            padding-left: 12px;
+            position: relative;
+        }
+        .bio-certs li::before {
+            content: '–';
+            position: absolute;
+            left: 0;
+            color: rgba(201,169,110,0.5);
+        }
+        .bio-certs a {
+            color: #9a8f7e;
+            text-decoration: underline;
+            text-decoration-color: rgba(201,169,110,0.3);
+            text-underline-offset: 3px;
+            transition: color 0.2s, text-decoration-color 0.2s;
+        }
+        .bio-certs a:hover {
+            color: var(--gold);
+            text-decoration-color: rgba(201,169,110,0.75);
+        }
+
+        .artist-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 6px;
+        }
+        .artist-stat-n {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            color: var(--gold);
+            line-height: 1;
+        }
+        .artist-stat-l {
+            font-size: 0.58rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        /* ── SCROLL CUE ── */
+        .scroll-cue {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: var(--ink-muted);
+            font-size: 0.62rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+        .scroll-cue-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--ink-label), transparent);
+            animation: linePulse 2s ease-in-out infinite;
+        }
+        @keyframes linePulse {
+            0%,100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* ── PROGRESS DOTS ── */
+        .progress-dots {
+            position: fixed;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(201,169,110,0.25);
+            border: 1px solid rgba(201,169,110,0.4);
+            transition: background 0.4s, transform 0.4s;
+            cursor: pointer;
+        }
+        .dot.active {
+            background: var(--gold);
+            transform: scale(1.5);
+        }
+
+        /* ── MUSEUM ROOM LAYOUT ── */
+        .room-wrapper {
+            height: 125vh;
+            position: relative;
+        }
+        .room-shell {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: var(--wall);
+        }
+
+        /* Ceiling */
+        .room-ceiling {
+            height: 9vh;
+            flex-shrink: 0;
+            background: linear-gradient(to bottom, #c8c2b2 0%, var(--ceiling) 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        /* Room body — the wall area */
+        .room-body {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: stretch;
+            overflow: hidden;
+        }
+        /* Warm spotlight on wall */
+        .room-body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 55% 65% at 38% 45%, rgba(255,252,230,0.45) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        /* Side depth edges */
+        .room-edge-l,
+        .room-edge-r {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 10%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .room-edge-l {
+            left: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.18) 0%, transparent 100%);
+        }
+        .room-edge-r {
+            right: 0;
+            background: linear-gradient(to left, rgba(0,0,0,0.18) 0%, transparent 100%);
+        }
+
+        /* Room content grid */
+        .room-grid {
+            position: relative;
+            z-index: 4;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ── PAINTING COLUMN ── */
+        .paint-col {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ── CLASSICAL WOODEN FRAME ── */
+        .frame-outer {
+            position: relative;
+            padding: 36px;
+            /* Mahogany / dark walnut with warm bevel highlights */
+            background: linear-gradient(145deg,
+                #c8704a 0%,
+                #7a3518 10%,
+                #5c2610 22%,
+                #3c1608 45%,
+                #5a2610 60%,
+                #8c4422 78%,
+                #be6c3c 100%
+            );
+            box-shadow:
+                /* outer rim highlight */
+                inset 3px 3px 0 rgba(210,130,75,0.45),
+                inset -3px -3px 0 rgba(8,2,0,0.75),
+                /* first carved step */
+                inset 8px 8px 0 rgba(0,0,0,0.14),
+                inset -8px -8px 0 rgba(160,80,35,0.18),
+                /* inner cove shadow */
+                inset 18px 18px 10px rgba(0,0,0,0.28),
+                /* wall drop shadow */
+                8px 22px 60px rgba(0,0,0,0.6),
+                3px 8px 20px rgba(0,0,0,0.35);
+            width: 100%;
+        }
+
+        /* Corner rosettes and mid-side accents */
+        .frame-outer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                /* Four corner rosettes — concentric rings */
+                radial-gradient(circle at 18px 18px,
+                    #e8a060 0 3px, #5c2808 3px 5px, #c87030 5px 7px, #3e1606 7px 9px, #a05828 9px 11px, transparent 13px),
+                radial-gradient(circle at calc(100% - 18px) 18px,
+                    #e8a060 0 3px, #5c2808 3px 5px, #c87030 5px 7px, #3e1606 7px 9px, #a05828 9px 11px, transparent 13px),
+                radial-gradient(circle at 18px calc(100% - 18px),
+                    #e8a060 0 3px, #5c2808 3px 5px, #c87030 5px 7px, #3e1606 7px 9px, #a05828 9px 11px, transparent 13px),
+                radial-gradient(circle at calc(100% - 18px) calc(100% - 18px),
+                    #e8a060 0 3px, #5c2808 3px 5px, #c87030 5px 7px, #3e1606 7px 9px, #a05828 9px 11px, transparent 13px),
+                /* Mid-side cartouche accents */
+                radial-gradient(circle at 50% 18px,
+                    #d08848 0 2px, #5c2808 2px 4px, #b86828 4px 6px, transparent 7px),
+                radial-gradient(circle at 50% calc(100% - 18px),
+                    #d08848 0 2px, #5c2808 2px 4px, #b86828 4px 6px, transparent 7px),
+                radial-gradient(circle at 18px 50%,
+                    #d08848 0 2px, #5c2808 2px 4px, #b86828 4px 6px, transparent 7px),
+                radial-gradient(circle at calc(100% - 18px) 50%,
+                    #d08848 0 2px, #5c2808 2px 4px, #b86828 4px 6px, transparent 7px);
+        }
+        /* Inner decorative border line */
+        .frame-outer::after {
+            content: '';
+            position: absolute;
+            inset: 24px;
+            border: 1px solid rgba(190,110,55,0.3);
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.35), 0 0 3px rgba(0,0,0,0.2);
+            pointer-events: none;
+        }
+
+        /* Inner liner — dark cove */
+        .frame-liner {
+            padding: 7px;
+            background: linear-gradient(135deg, #120804 0%, #1c0c06 60%, #0e0502 100%);
+            box-shadow:
+                inset 2px 2px 6px rgba(0,0,0,0.9),
+                inset -1px -1px 3px rgba(90,40,10,0.15);
+        }
+        /* Canvas reveal wrapper */
+        .canvas-reveal {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            /* never exceed room height */
+            max-height: calc(100vh - 13vh - 80px);
+            overflow: hidden;
+        }
+        .painting-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        /* Placard — overlaid on art */
+        .painting-placard {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            background: rgba(247,243,235,0.88);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(120,90,30,0.2);
+            box-shadow: 0 3px 14px rgba(0,0,0,0.25);
+            padding: 9px 24px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .plaque-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.88rem;
+            color: var(--ink);
+            letter-spacing: 0.04em;
+        }
+        .plaque-meta {
+            font-size: 0.68rem;
+            color: var(--ink-muted);
+            font-style: italic;
+            margin-top: 3px;
+        }
+
+        /* ── INFO COLUMN ── */
+        .info-col {
+            background: var(--wall);
+            border-left: 1px solid rgba(120,90,30,0.15);
+            padding: 0 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(22px);
+            will-change: opacity, transform;
+            overflow: hidden;
+        }
+        .info-eyebrow {
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #8b6520;
+            margin-bottom: 16px;
+        }
+        .info-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            line-height: 1.15;
+            color: var(--ink);
+            margin-bottom: 6px;
+        }
+        .info-year {
+            font-size: 0.78rem;
+            color: var(--ink-muted);
+            font-style: italic;
+            margin-bottom: 20px;
+            letter-spacing: 0.04em;
+        }
+        .info-rule {
+            height: 1px;
+            background: linear-gradient(to right, rgba(180,130,30,0.55), rgba(180,130,30,0.1), transparent);
+            margin: 24px 0;
+        }
+        .info-desc {
+            font-size: 0.86rem;
+            line-height: 1.9;
+            color: var(--ink-mid);
+            margin-bottom: 32px;
+        }
+        .code-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            border: 1px solid rgba(120,90,40,0.4);
+            color: #7a5820;
+            padding: 10px 22px;
+            font-size: 0.68rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: background 0.25s, border-color 0.25s;
+            margin-bottom: 14px;
+            width: fit-content;
+        }
+        .code-toggle:hover { background: rgba(120,90,40,0.08); border-color: rgba(120,90,40,0.7); }
+        .code-toggle .arrow { transition: transform 0.3s; }
+        .code-toggle.open .arrow { transform: rotate(90deg); }
+
+        .code-drawer {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+            border: 1px solid transparent;
+        }
+        .code-drawer.open {
+            max-height: 380px;
+            border-color: rgba(120,90,40,0.18);
+        }
+        .code-drawer pre {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 360px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.68rem;
+            line-height: 1.65;
+            white-space: pre;
+            background: #2a1e10;
+        }
+        .code-drawer pre .kw  { color: #c678dd; }
+        .code-drawer pre .bi  { color: #56b6c2; }
+        .code-drawer pre .nm  { color: #d19a66; }
+        .code-drawer pre .cm  { color: #7a6855; font-style: italic; }
+        .code-drawer pre .tp  { color: #e5c07b; }
+
+        /* ── ALTERNATING LAYOUT ── */
+        .room-flip .room-grid { grid-template-columns: 1fr 3fr; }
+        .room-flip .paint-col {
+            grid-column: 2; grid-row: 1;
+        }
+        .room-flip .info-col {
+            grid-column: 1; grid-row: 1;
+            border-left: none;
+            border-right: 1px solid rgba(120,90,30,0.15);
+        }
+        .room-flip .room-body::before {
+            background: radial-gradient(ellipse 55% 65% at 62% 45%, rgba(255,252,230,0.45) 0%, transparent 100%);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--bg);
+            border-top: 1px solid rgba(201,169,110,0.1);
+            padding: 70px 48px;
+            text-align: center;
+        }
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--gold);
+            margin-bottom: 16px;
+        }
+        footer p {
+            font-size: 0.78rem;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 768px) {
+
+            .nav { padding: 16px 20px; }
+            .nav-links { display: none; }
+
+            /* Artist intro room on mobile */
+            .artist-diptych {
+                padding: 48px 16px 32px;
+            }
+            .diptych-portrait {
+                width: 160px;
+                height: 160px;
+                margin-bottom: 20px;
+            }
+            .diptych-bio {
+                padding: 16px 18px;
+            }
+            .diptych-bio .info-title { font-size: 1.9rem; }
+            .diptych-bio .info-rule { margin: 12px 0; }
+            .diptych-bio .info-desc { font-size: 0.8rem; margin-bottom: 10px; }
+            .artist-stats-grid { gap: 10px; margin-top: 4px; }
+            .artist-stat-n { font-size: 1.4rem; }
+
+            /* Room */
+            .room-ceiling { height: 40px; }
+
+            .room-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: 55vh 45vh;
+            }
+
+            /* Reset flip layout to single column on mobile */
+            .room-flip .room-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: 55vh 45vh;
+            }
+            .room-flip .paint-col {
+                grid-column: 1;
+                grid-row: 1;
+            }
+            .room-flip .info-col {
+                grid-column: 1;
+                grid-row: 2;
+                border-right: none;
+                border-top: 1px solid rgba(120,90,30,0.18);
+            }
+            .room-flip .room-body::before {
+                background: radial-gradient(ellipse 55% 65% at 50% 45%, rgba(255,252,230,0.45) 0%, transparent 100%);
+            }
+
+            .painting-placard { display: none; }
+
+            .info-col {
+                border-left: none;
+                border-top: 1px solid rgba(120,90,30,0.18);
+                padding: 20px 20px;
+                justify-content: flex-start;
+                overflow-y: auto;
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            .info-title { font-size: 1.8rem; }
+            .info-desc { font-size: 0.82rem; line-height: 1.75; margin-bottom: 18px; }
+            .code-toggle { display: none; }
+            .code-drawer { display: none; }
+
+            .progress-dots { display: none; }
+
+            footer { padding: 50px 24px; }
+            .footer-logo { font-size: 1.7rem; }
+        }
+
+        @media (max-width: 380px) {
+            .hero-name { font-size: 2.1rem; }
+            .hero-portrait-wrap { height: 210px; }
+            .info-title { font-size: 1.55rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-logo">Accapelo.github.io</div>
+</nav>
+
+<!-- ARTIST INTRO ROOM -->
+<div class="artist-intro-wrapper">
+<div class="room-shell room-shell--intro">
+    <div class="room-body">
+        <div class="room-edge-l"></div>
+        <div class="room-edge-r"></div>
+        <div class="artist-frame-wrap">
+            <div class="artist-diptych">
+                <div class="diptych-portrait">
+                    <canvas id="portrait-canvas"></canvas>
+                </div>
+                <div class="diptych-bio">
+                    <p class="info-eyebrow">Senior System Developer</p>
+                    <h1 class="info-title">Tobias Eriksson</h1>
+                    <p class="info-year">Skövde, Sweden</p>
+                    <div class="info-rule"></div>
+                    <p class="info-desc">I've always been a creative person, having studied several musical instruments growing up and also game development in university. Although I don't enjoy game developent anymore, my need for creative outlets still exist. As I've aged this creativity has slowly shifted towards fashion and cooking but in finding the tools of Claude and OpenGL my interest was piqued. This site is a way for me scratch that itch, to see what can be done in the way of art in web development using nothing but code. No images, no videos, just one HTML-file filled with code.</p>
+                    <p class="info-desc">Skills</p>
+                    <div class="bio-skills">
+                        <span class="bio-skill">Typescript / Javascript</span>
+                        <span class="bio-skill">Next.js</span>
+                        <span class="bio-skill">React</span>
+                        <span class="bio-skill">Node.js</span>
+                        <span class="bio-skill">Redis</span>
+                        <span class="bio-skill">SQL</span>
+                        <span class="bio-skill">GraphQL</span>
+                        <span class="bio-skill">Azure DevOps</span>
+                        <span class="bio-skill">Contentful</span>
+                        <span class="bio-skill">Power Platform</span>
+                        <span class="bio-skill">SEO / WCAG / GDPR</span>
+                        <span class="bio-skill">AI / Anthropic</span>
+                        <span class="bio-skill">Java</span>
+                        <span class="bio-skill">C#</span>
+                        <span class="bio-skill">OpenGL</span>
+                    </div>
+                    <div class="bio-lists-row">
+                        <ul class="bio-certs">
+                            <p class="info-desc">Contact</p>
+                            <li><a href="https://www.linkedin.com/in/tobias-eriksson-7029b517b/" target="_blank" rel="noopener">LinkedIn</a></li>
+                            <li><a href="https://github.com/Accapelo" target="_blank" rel="noopener">Github</a></li>
+                            <li><a href="mailto:tobbe_felix@msn.com" target="_blank" rel="noopener">tobbe_felix@msn.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-cue">
+        <span>Scroll</span>
+        <div class="scroll-cue-line"></div>
+    </div>
+</div>
+</div><!-- /.artist-intro-wrapper -->
+
+<!-- PROGRESS DOTS -->
+<div class="progress-dots" id="dots"></div>
+
+<!-- GALLERY ROOMS -->
+<main id="gallery">
+
+    <!-- Room 0: Boreal Light -->
+    <div class="room-wrapper room-flip" data-idx="0">
+        <div class="room-shell">
+            <div class="room-body">
+                <div class="room-edge-l"></div>
+                <div class="room-edge-r"></div>
+                <div class="room-grid">
+                    <div class="paint-col">
+                        <canvas class="painting-canvas" id="canvas-0"></canvas>
+                        <div class="painting-placard">
+                            <div class="plaque-title">The Eye</div>
+                            <div class="plaque-meta">Tobias Eriksson &middot; 2026</div>
+                        </div>
+                    </div>
+                    <div class="info-col" id="panel-0">
+                        <p class="info-eyebrow">The Observational Series</p>
+                        <h2 class="info-title">The Eye</h2>
+                        <p class="info-year">2026 &middot; GLSL / WebGL &middot; Real-time</p>
+                        <div class="info-rule"></div>
+                        <p class="info-desc">A living iris enclosing an entire galaxy within its pupil. Concentric ring-segments rotate at individually hashed rates, their pigmentation drifting through a slow cosine palette. At the centre, a Milky Way band tilted 35° across the dark pupil holds nebula haze, a warm galactic core, and four layers of twinkling stars — the universe glimpsed through a single watching eye.</p>
+                        <button class="code-toggle" data-drawer="drawer-0"><span class="arrow">&#9654;</span> View GLSL Source</button>
+                        <div class="code-drawer" id="drawer-0"><pre id="pre-0"></pre></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Room 1: Chromatic Tides -->
+    <!-- <div class="room-wrapper" data-idx="1">
+        <div class="room-shell">
+            <div class="room-body">
+                <div class="room-edge-l"></div>
+                <div class="room-edge-r"></div>
+                <div class="room-grid">
+                    <div class="paint-col">
+                        <canvas class="painting-canvas" id="canvas-1"></canvas>
+                        <div class="painting-placard">
+                            <div class="plaque-title">Chromatic Tides</div>
+                            <div class="plaque-meta">Tobias Eriksson &middot; 2026</div>
+                        </div>
+                    </div>
+                    <div class="info-col" id="panel-1">
+                        <p class="info-eyebrow">The Atmospheric Series</p>
+                        <h2 class="info-title">Chromatic Tides</h2>
+                        <p class="info-year">2026 &middot; GLSL / WebGL &middot; Real-time</p>
+                        <div class="info-rule"></div>
+                        <p class="info-desc">The ocean as optical instrument. "Chromatic Tides" studies how light fractures across moving water, pulling the white spectrum into its constituent colors. Waves become prisms. The horizon oscillates between amber and violet. Vellum describes this work as a score for light, where the wave function determines both rhythm and pitch.</p>
+                        <button class="code-toggle" data-drawer="drawer-1"><span class="arrow">&#9654;</span> View GLSL Source</button>
+                        <div class="code-drawer" id="drawer-1"><pre id="pre-1"></pre></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Room 2: Stellar Nursery -->
+    <!-- <div class="room-wrapper room-flip" data-idx="2">
+        <div class="room-shell">
+            <div class="room-body">
+                <div class="room-edge-l"></div>
+                <div class="room-edge-r"></div>
+                <div class="room-grid">
+                    <div class="paint-col">
+                        <canvas class="painting-canvas" id="canvas-2"></canvas>
+                        <div class="painting-placard">
+                            <div class="plaque-title">Stellar Nursery</div>
+                            <div class="plaque-meta">Tobias Eriksson &middot; 2026</div>
+                        </div>
+                    </div>
+                    <div class="info-col" id="panel-2">
+                        <p class="info-eyebrow">The Cosmological Series</p>
+                        <h2 class="info-title">Stellar Nursery</h2>
+                        <p class="info-year">2026 &middot; GLSL / WebGL &middot; Real-time</p>
+                        <div class="info-rule"></div>
+                        <p class="info-desc">Created in response to the first images from the James Webb Space Telescope. Fractal noise functions model the gas clouds; luminous pinpoints emerge from the mathematics like suns coalescing from primordial hydrogen. Time here operates at cosmological scale — one second of viewing equals ten thousand years of becoming.</p>
+                        <button class="code-toggle" data-drawer="drawer-2"><span class="arrow">&#9654;</span> View GLSL Source</button>
+                        <div class="code-drawer" id="drawer-2"><pre id="pre-2"></pre></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Room 3: Geometric Reverie -->
+    <!-- <div class="room-wrapper" data-idx="3">
+        <div class="room-shell">
+            <div class="room-body">
+                <div class="room-edge-l"></div>
+                <div class="room-edge-r"></div>
+                <div class="room-grid">
+                    <div class="paint-col">
+                        <canvas class="painting-canvas" id="canvas-3"></canvas>
+                        <div class="painting-placard">
+                            <div class="plaque-title">Geometric Reverie</div>
+                            <div class="plaque-meta">Tobias Eriksson &middot; 2026</div>
+                        </div>
+                    </div>
+                    <div class="info-col" id="panel-3">
+                        <p class="info-eyebrow">The Geometric Series</p>
+                        <h2 class="info-title">Geometric Reverie</h2>
+                        <p class="info-year">2026 &middot; GLSL / WebGL &middot; Real-time</p>
+                        <div class="info-rule"></div>
+                        <p class="info-desc">The final work in Vellum's 2024 collection returns to pure form. Hexagonal tessellations rotate and interpenetrate according to harmonic frequencies — a visual music theory. The palette cycles through the full spectrum in slow waves, governed by a cosine function Vellum calls "the artist's heartbeat." This is mathematics in a state of reverie.</p>
+                        <button class="code-toggle" data-drawer="drawer-3"><span class="arrow">&#9654;</span> View GLSL Source</button>
+                        <div class="code-drawer" id="drawer-3"><pre id="pre-3"></pre></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+</main>
+
+<footer>
+    <div class="footer-logo">Accapelo.github.io</div>
+    <p>Portfolio of Tobias Eriksson &mdash; Senior System Developer. GLSL paintings rendered in real time.</p>
+    <p style="margin-top:8px;opacity:0.45;">Skövde &nbsp;&middot;&nbsp; Sweden</p>
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+// SHADERS
+// ─────────────────────────────────────────────
+const VS = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
+
+
+const PORTRAIT_FS = `#version 300 es
+precision highp float;
+precision highp int;
+#define IMG_W 45
+#define IMG_H 46
+#define GRID 1.0
+#define BG_ROWS 2
+uniform vec2 u_res;
+uniform float u_t;
+out vec4 fragColor;
+const uint P[2070]=uint[2070](
+0x7a7a7au,0x717171u,0x6f6f6fu,0x797979u,0x727071u,0x7f7d7eu,0x646361u,0x8b8a88u,0x979596u,
+0x898788u,0x918f90u,0x9a9899u,0x878382u,0x84807fu,0x837e7bu,0x75706cu,0x615b57u,0x857d7bu,
+0x867e7cu,0x837b7bu,0x7c7774u,0x6c6663u,0x605953u,0x665d56u,0x818079u,0x827e7bu,0x797071u,
+0x5b504eu,0x504742u,0x79706bu,0x867d78u,0x867d78u,0x837874u,0x817670u,0x82756du,0x74665du,
+0x6c5a50u,0x705f57u,0x80716au,0x847771u,0x857b79u,0x867e7cu,0x867e7cu,0x857f7fu,0x8c8688u,
+0x7b7b7bu,0x6d6d6du,0x757575u,0x747474u,0x727071u,0x7f7d7eu,0x656462u,0x908f8du,0x9b999au,
+0x898788u,0x959394u,0x959394u,0x868281u,0x837f7eu,0x837e7bu,0x78736fu,0x6d6260u,0x877d7cu,
+0x827d7bu,0x7e7b79u,0x7e7674u,0x6e6563u,0x635a55u,0x685e57u,0x837f79u,0x837e7bu,0x797071u,
+0x5a504eu,0x504743u,0x79706cu,0x847b77u,0x847b77u,0x837874u,0x817671u,0x81746cu,0x73655cu,
+0x6c5a50u,0x705f57u,0x81726bu,0x867973u,0x867c7au,0x88807eu,0x877f7du,0x878181u,0x8c8688u,
+0x7b7b7bu,0x6f6f6fu,0x7a7a7au,0x717171u,0x7a7879u,0x7d7b7cu,0x5e5d5bu,0x91908eu,0x999798u,
+0x8f8d8eu,0x969495u,0x949293u,0x858180u,0x827e7du,0x817c79u,0x706b67u,0x675e5cu,0x716867u,
+0x7f7876u,0x7c7776u,0x756b6au,0x665c5au,0x605450u,0x635650u,0x847e78u,0x827c79u,0x766d6eu,
+0x59514eu,0x544a48u,0x7d7371u,0x847a78u,0x837977u,0x827775u,0x807571u,0x7f726cu,0x72635cu,
+0x6d5b51u,0x716058u,0x80716au,0x8a7d77u,0x877d7bu,0x89817fu,0x89817fu,0x888282u,0x8c8688u,
+0x7a7a7au,0x6a6a6au,0x7e7e7eu,0x6d6d6du,0x7a7879u,0x7d7b7cu,0x5f5e5cu,0x939290u,0x969495u,
+0x8f8d8eu,0x999798u,0x969495u,0x858180u,0x827e7du,0x7f7a77u,0x6a6561u,0x4e4d48u,0x34302du,
+0x5e5654u,0x594c4fu,0x4d4141u,0x483a39u,0x50423fu,0x5b4c47u,0x6e6660u,0x7b7371u,0x756c6du,
+0x55504cu,0x524847u,0x827877u,0x837978u,0x817776u,0x7f7473u,0x7e7371u,0x7f716du,0x72635cu,
+0x6d5a51u,0x716058u,0x80716au,0x8a7d77u,0x897f7du,0x8a8280u,0x8b8381u,0x898383u,0x8c8688u,
+0x7a7a7au,0x636363u,0x808080u,0x696969u,0x7e7d7bu,0x7b7a78u,0x636260u,0x959492u,0x999798u,
+0x8f8d8eu,0x979596u,0x8f8d8eu,0x83807bu,0x7f7c77u,0x67625eu,0x4e4945u,0x48403du,0x352c2au,
+0x433836u,0x4a3d3cu,0x4a3c39u,0x473834u,0x4b3a36u,0x4e3d37u,0x55433fu,0x645550u,0x6d6361u,
+0x524b48u,0x504541u,0x807571u,0x827773u,0x827773u,0x807571u,0x7d726cu,0x7d706au,0x72635cu,
+0x6b5a52u,0x6e6053u,0x807369u,0x8a7f7cu,0x8c8281u,0x8c8482u,0x8c8384u,0x8a8484u,0x8d8789u,
+0x767676u,0x5f5f5fu,0x7e7e7eu,0x676767u,0x7f7e7cu,0x7a7977u,0x646361u,0x969593u,0x999798u,
+0x8e8c8du,0x999798u,0x868485u,0x817d7au,0x5e5a57u,0x4e4946u,0x3f3a37u,0x372f2du,0x302826u,
+0x362c2bu,0x3c3231u,0x3e3331u,0x362b29u,0x342725u,0x3b2d29u,0x483432u,0x483634u,0x473734u,
+0x4c3d3cu,0x504541u,0x807571u,0x827773u,0x827773u,0x807571u,0x7d726cu,0x7d706au,0x72635cu,
+0x6b5a52u,0x6e6055u,0x80736au,0x8a7f7du,0x8d8482u,0x8e8684u,0x8d8787u,0x8d8787u,0x8d8789u,
+0x777777u,0x585858u,0x7e7e7eu,0x646464u,0x7f7e7cu,0x777674u,0x666563u,0x9a9997u,0xa09e9fu,
+0x908e8fu,0x999798u,0x767475u,0x74706du,0x3d3937u,0x312c2au,0x2e2927u,0x342c2bu,0x3a3231u,
+0x36312fu,0x2d2825u,0x272222u,0x292121u,0x2d2524u,0x342b29u,0x413231u,0x4d3b3au,0x493735u,
+0x3e2a28u,0x493d39u,0x817672u,0x817672u,0x817672u,0x7e736fu,0x7c716bu,0x7e716bu,0x71625bu,
+0x6b5a53u,0x6c5e54u,0x81746bu,0x8b807fu,0x8c8583u,0x8e8986u,0x8e8989u,0x8e8a89u,0x918b8du,
+0x757575u,0x5a5a5au,0x7e7e7eu,0x636363u,0x7f7e7cu,0x777674u,0x6b6a68u,0x999896u,0x9b999au,
+0x6c6a6bu,0x5d5b5cu,0x444243u,0x383433u,0x2a2625u,0x2d2727u,0x352f2fu,0x393031u,0x302a2au,
+0x24201fu,0x1f1e1cu,0x201e21u,0x221e20u,0x221e1fu,0x262020u,0x28211fu,0x342a28u,0x362825u,
+0x44322eu,0x3e322fu,0x7c716du,0x847975u,0x847975u,0x817672u,0x7f746eu,0x7e716bu,0x71625bu,
+0x6b5a53u,0x6c5e55u,0x81746cu,0x8b7f7fu,0x8d8785u,0x8f8a87u,0x918d8cu,0x918d8cu,0x928c8eu,
+0x737373u,0x5c5c5cu,0x7c7c7cu,0x686868u,0x7f7e7cu,0x777674u,0x737270u,0x969593u,0x878586u,
+0x817f80u,0x6b696au,0x393738u,0x252422u,0x2c2827u,0x2f2a2au,0x2f2929u,0x2f292bu,0x211f1fu,
+0x252120u,0x2c2121u,0x29221fu,0x26201fu,0x221f1eu,0x1c1c1bu,0x251c1au,0x312725u,0x40322fu,
+0x483634u,0x483636u,0x5d4d4du,0x857776u,0x837977u,0x827773u,0x827771u,0x80736du,0x72635cu,
+0x6c5953u,0x6f5e56u,0x81746cu,0x8b8180u,0x8f8687u,0x938a8bu,0x938d8fu,0x918d8eu,0x949091u,
+0x717171u,0x5d5d5du,0x777777u,0x676767u,0x7f7e7cu,0x777674u,0x777674u,0x979694u,0x888687u,
+0x5f5d5eu,0x3f3d3eu,0x2c2a2bu,0x292826u,0x282423u,0x292223u,0x2e2526u,0x312627u,0x392b2du,
+0x493336u,0x5f4146u,0x6f4950u,0x654549u,0x493436u,0x2e2221u,0x2a201eu,0x362b29u,0x3c2e2bu,
+0x483936u,0x4a3838u,0x433333u,0x827473u,0x857b79u,0x837874u,0x837874u,0x82756fu,0x73645eu,
+0x6d5a54u,0x716058u,0x82756du,0x8d8382u,0x918889u,0x948b8cu,0x938d8fu,0x918d8eu,0x949091u,
+0x757575u,0x636363u,0x747474u,0x6c6c6cu,0x807f7du,0x777674u,0x7d7c7au,0x8c8b89u,0x636162u,
+0x474546u,0x2a2829u,0x262425u,0x21211fu,0x272322u,0x2c2324u,0x392c2fu,0x4f3a3bu,0x674b4eu,
+0x7e595du,0x986f74u,0xa27f7eu,0xa37b7cu,0x7d5c5du,0x493433u,0x372b29u,0x382a29u,0x3b2d2au,
+0x3c2e2bu,0x433131u,0x3f2f2fu,0x534544u,0x857b79u,0x867b79u,0x837874u,0x817370u,0x73645fu,
+0x6d5a54u,0x705f57u,0x82756du,0x8b8180u,0x92898au,0x958c8du,0x948e90u,0x938f90u,0x999596u,
+0x6f6f6fu,0x6f6f6fu,0x727272u,0x6d6d6du,0x807f7du,0x777674u,0x7a7977u,0x5f5e5cu,0x3f3d3eu,
+0x333132u,0x282627u,0x242223u,0x232321u,0x292424u,0x302526u,0x3d2e31u,0x5d3f41u,0x7f5b5du,
+0x936b6cu,0x9e7778u,0xa2817cu,0xa8817fu,0x8a6664u,0x533e38u,0x443635u,0x3c2e2du,0x3a2c29u,
+0x322723u,0x382727u,0x3c2c2cu,0x302221u,0x756b69u,0x847977u,0x847977u,0x827471u,0x746562u,
+0x6e5b56u,0x716058u,0x82756du,0x8b8180u,0x92898au,0x958c8du,0x938d8fu,0x959192u,0x9a9697u,
+0x6c6c6cu,0x717171u,0x6c6c6cu,0x727272u,0x7d7d7du,0x7d7d7du,0x737373u,0x404040u,0x333132u,
+0x2e2c2du,0x272526u,0x252324u,0x242327u,0x242424u,0x2f2826u,0x463434u,0x664847u,0x7f605eu,
+0x957270u,0x9e7875u,0xa27f79u,0xa67f78u,0x835d5au,0x583a3cu,0x53393cu,0x4b3738u,0x442f31u,
+0x392a29u,0x332620u,0x372926u,0x352925u,0x342a28u,0x857b7cu,0x867a7au,0x837876u,0x736562u,
+0x705c54u,0x74615au,0x857671u,0x8b807eu,0x938a88u,0x958d8bu,0x938d8du,0x959190u,0x9c9698u,
+0x696969u,0x767676u,0x6f6f6fu,0x797979u,0x808080u,0x7d7d7du,0x4d4d4du,0x393939u,0x353334u,
+0x2c2a2bu,0x252324u,0x242223u,0x252125u,0x2b2527u,0x3e2d2eu,0x624849u,0x795654u,0x876361u,
+0x936e6bu,0xa37f79u,0xa58281u,0xa98481u,0x9a7473u,0x664447u,0x593c40u,0x563d3fu,0x6c4d52u,
+0x4e3336u,0x3c2b27u,0x3b2b29u,0x362724u,0x362626u,0x6e6463u,0x887c7cu,0x847975u,0x746761u,
+0x705c54u,0x74615au,0x857671u,0x8b807eu,0x938a88u,0x958d8bu,0x928c8cu,0x938f8eu,0x9c9698u,
+0x626262u,0x7a7a7au,0x656565u,0x7b7b7bu,0x818181u,0x696969u,0x404040u,0x353535u,0x312f30u,
+0x2b292au,0x252324u,0x242223u,0x222324u,0x352c2du,0x584545u,0x785e5eu,0x8e6865u,0x8d6a66u,
+0x937471u,0x927571u,0x8e7274u,0x8b6f71u,0xa08284u,0x735150u,0x563637u,0x583c3bu,0x765455u,
+0x755455u,0x48322fu,0x3d2928u,0x3e2e2bu,0x322423u,0x4c4241u,0x8a7f7du,0x867b77u,0x746761u,
+0x705c54u,0x74615au,0x847570u,0x8b807eu,0x938a88u,0x958d8bu,0x958f8fu,0x94908fu,0x9c9698u,
+0x5e5e5eu,0x777777u,0x6a6a6au,0x818181u,0x7c7c7cu,0x4a4a4au,0x373737u,0x2f2f2fu,0x2e2c2du,
+0x282627u,0x252324u,0x242223u,0x242424u,0x423436u,0x664c4fu,0x816262u,0x886665u,0x7f6362u,
+0x664f4fu,0x5d4b4cu,0x5d4d4eu,0x87787du,0x665254u,0x6c4e4cu,0x613d3du,0x543634u,0x563735u,
+0x614844u,0x322a23u,0x78706au,0x5b4d4au,0x5d4b4bu,0x4c4240u,0x897e7au,0x877c76u,0x766961u,
+0x705c54u,0x74615au,0x847570u,0x8b807eu,0x938a88u,0x958d8bu,0x958f8fu,0x94908fu,0x9c9698u,
+0x565658u,0x79797bu,0x656567u,0x7d7d7fu,0x828284u,0x49494bu,0x2f2f31u,0x2b2b2du,0x2d2d2du,
+0x252525u,0x252525u,0x212121u,0x272626u,0x473639u,0x6f5255u,0x836766u,0x7b6065u,0x533d40u,
+0x4f393cu,0x796f6eu,0xaeb2b5u,0xd1cfd2u,0x48393cu,0x5a4144u,0x7a5a4fu,0x6a4743u,0x694746u,
+0x492f2au,0x857877u,0xa69c9du,0x705b5bu,0x4e3e3bu,0x705d57u,0x85746du,0x8d7e79u,0x756862u,
+0x6f5e57u,0x72635cu,0x837670u,0x8e837fu,0x938a89u,0x968e8cu,0x979191u,0x959190u,0x9b9798u,
+0x565658u,0x757577u,0x606062u,0x818183u,0x747476u,0x343436u,0x2a2a2cu,0x252527u,0x292929u,
+0x252525u,0x272727u,0x242424u,0x2b2b2bu,0x4c3b3eu,0x705357u,0x7c605fu,0x5e4549u,0x52393du,
+0x705358u,0x937f81u,0xa0969eu,0xb7abafu,0x6b5559u,0x674d50u,0x8a6962u,0x8e6960u,0x99746bu,
+0x6a4b42u,0x624b4du,0x6c5e5eu,0x6e5555u,0x735658u,0x7c6a66u,0x776561u,0x70615cu,0x796c66u,
+0x6f5e57u,0x72635cu,0x837670u,0x8e837fu,0x938a89u,0x968e8cu,0x979191u,0x959192u,0x9b9798u,
+0x575759u,0x767678u,0x616163u,0x848486u,0x707072u,0x323234u,0x29292bu,0x222224u,0x252525u,
+0x242424u,0x262626u,0x232323u,0x252525u,0x4a3a3cu,0x75575bu,0x6e5251u,0x664c50u,0x574144u,
+0x604a4du,0x4f4544u,0x4e4c4fu,0x54484cu,0x6c5357u,0x704d51u,0x7a5857u,0x866058u,0xac8276u,
+0x7d554bu,0x78615eu,0x544a48u,0x685753u,0x826d6cu,0x877979u,0x988a89u,0x8c7e7bu,0x766764u,
+0x6f5e57u,0x72635cu,0x837670u,0x8e837fu,0x92898au,0x968d8eu,0x979193u,0x969193u,0x9b9798u,
+0x565658u,0x717173u,0x616163u,0x858587u,0x757577u,0x323234u,0x313133u,0x222224u,0x222222u,
+0x212121u,0x212121u,0x1e1e1eu,0x232223u,0x473639u,0x6b4e51u,0x6e5352u,0x674c51u,0x533c3fu,
+0x51383cu,0x6a5c5cu,0x75686fu,0x6e5b5fu,0x876a6eu,0x835f63u,0x826061u,0x885c5fu,0xba8888u,
+0xbd8d84u,0x916968u,0x866769u,0x8c6a6bu,0x9e8688u,0x8a7f83u,0x8e8284u,0x8c7e7du,0x766764u,
+0x6f5e57u,0x72635cu,0x837670u,0x8e837fu,0x92898au,0x968d90u,0x989294u,0x979296u,0x9b9798u,
+0x5e5e5eu,0x6f6f6fu,0x626262u,0x7d7d7du,0x7a7b7bu,0x343635u,0x303030u,0x272727u,0x202423u,
+0x1e2221u,0x202020u,0x1f1d1eu,0x2a2323u,0x5c4144u,0x785859u,0x836461u,0x826267u,0x65454au,
+0x644449u,0x78585du,0x8d6570u,0x9a727au,0x946d70u,0x9a7473u,0x916f6du,0x8f6664u,0xab7b77u,
+0xb98d84u,0xa3776eu,0xab8279u,0xa5837au,0xa5867fu,0x9a8579u,0x8f8a87u,0x84817du,0x776863u,
+0x705e5au,0x73655cu,0x83766eu,0x8f8482u,0x928889u,0x978e8fu,0x989292u,0x959190u,0x9e989au,
+0x626262u,0x6c6c6cu,0x636363u,0x7a7a7au,0x797979u,0x464445u,0x303030u,0x272727u,0x262525u,
+0x201f1fu,0x201f20u,0x232122u,0x383131u,0x6d5356u,0x7e5e5fu,0x90716eu,0x8e6d66u,0x84635cu,
+0x86655eu,0x8e6d66u,0x916b6au,0x9a7473u,0xa98283u,0xa47e7du,0x8c6263u,0x8e6060u,0x9c6c68u,
+0xb0817bu,0xc19690u,0xaf847eu,0xa1766fu,0xae837cu,0xb0928au,0x958888u,0x887e7du,0x796763u,
+0x705e5au,0x73655cu,0x82756du,0x8d8280u,0x928889u,0x978e8fu,0x969090u,0x94908fu,0x9e989au,
+0x656565u,0x6d6d6du,0x676767u,0x787878u,0x787576u,0x726c6eu,0x353334u,0x433d3fu,0x44383cu,
+0x2e2528u,0x262324u,0x232323u,0x403637u,0x6f5256u,0x805e5fu,0x8a6866u,0x916c61u,0x926d62u,
+0x947064u,0x9b776bu,0xa17a74u,0xa67f7bu,0xaa8280u,0xa07879u,0x7f4f4fu,0x895d5cu,0x845c58u,
+0x8e6662u,0x9e7873u,0xa8807bu,0xb48882u,0xbb8e86u,0xb7918bu,0x968586u,0x897f7eu,0x796863u,
+0x6f5d59u,0x73655cu,0x82756du,0x8d8280u,0x938a8bu,0x978e8fu,0x989292u,0x979392u,0x9e989au,
+0x686868u,0x6a6a6au,0x676767u,0x787878u,0x767374u,0x7f7377u,0x616060u,0x544d4fu,0x4d3a40u,
+0x473b3fu,0x342e30u,0x272828u,0x3f3536u,0x6e5155u,0x795557u,0x82605eu,0x8e6561u,0x906763u,
+0x936a66u,0x9a716du,0xa17979u,0xaa8283u,0xb38b8cu,0xad8586u,0x774947u,0x835d5au,0x4f2f2au,
+0x5c3b36u,0x895d57u,0x9c6f69u,0xb98b87u,0xc0908cu,0xb9928cu,0x978788u,0x87817eu,0x736a63u,
+0x6e5d59u,0x73655cu,0x82756du,0x8d8280u,0x928889u,0x958c8du,0x989292u,0x979392u,0x9e989au,
+0x686a69u,0x656565u,0x6a6a6au,0x777576u,0x786f70u,0x7e7979u,0x858382u,0x6b575bu,0x684e51u,
+0x504044u,0x43383bu,0x443a39u,0x4a373bu,0x695255u,0x6f5253u,0x7a5857u,0x87615eu,0x8d6764u,
+0x906868u,0x9a7072u,0x9f7b7bu,0xaa8586u,0xac8482u,0xa27975u,0x602d32u,0x603738u,0x5c3d3bu,
+0x634442u,0x86605bu,0xae7d7bu,0xba8984u,0xbf8d86u,0xb6918bu,0x928786u,0x8b8180u,0x756663u,
+0x705d5bu,0x74635cu,0x81746cu,0x8d8382u,0x92898au,0x948b8cu,0x979193u,0x969293u,0x9d999au,
+0x686a69u,0x626262u,0x6b6b6bu,0x787677u,0x777171u,0x837f7eu,0x989896u,0x6e6163u,0x705458u,
+0x463a3eu,0x31282cu,0x5f4e4fu,0x59464au,0x5f4a4cu,0x61474au,0x6c4e50u,0x7a5856u,0x815e5cu,
+0x886261u,0x926a6au,0x9c7474u,0xa87e7fu,0xac8381u,0xa87c7bu,0x93696bu,0x805c5cu,0x7d5e5cu,
+0x957674u,0xa37c7au,0xb38481u,0xba8c87u,0xba8f88u,0xb6918bu,0x928786u,0x8a807fu,0x746562u,
+0x705d5bu,0x74635cu,0x81746cu,0x8d8382u,0x92898au,0x948b8cu,0x979193u,0x969293u,0x9d999au,
+0x6b6d6cu,0x5d5d5du,0x6f6f6fu,0x797778u,0x74706fu,0x837e7du,0x9d9d9bu,0x706969u,0x544549u,
+0x2b2b2eu,0x303034u,0x4c3f43u,0x584549u,0x584348u,0x574144u,0x61464bu,0x6e5050u,0x785859u,
+0x7e5a5au,0x8e6666u,0x9b6f6cu,0xa37774u,0xa17876u,0x976f6du,0x956e6fu,0x8f6d6cu,0x997675u,
+0xad8486u,0xae8283u,0xad7b7cu,0xb58782u,0xb69087u,0xb5918au,0x938786u,0x8b8180u,0x746562u,
+0x705d5cu,0x76655eu,0x81746cu,0x8a807fu,0x908788u,0x948b8cu,0x979193u,0x969293u,0x9b9798u,
+0x6c6e6du,0x595959u,0x707070u,0x777576u,0x72716fu,0x837e7du,0x9e9f9du,0x92918fu,0x514d4fu,
+0x252429u,0x1d1a20u,0x32272cu,0x554246u,0x59464au,0x564148u,0x584149u,0x644a4du,0x735658u,
+0x7e5b5bu,0x8b6363u,0x946d66u,0x97726au,0x8c6963u,0x866560u,0x8c6566u,0x866262u,0x7f5355u,
+0x7f484eu,0x804a4fu,0x8c5155u,0x8a5957u,0xab827cu,0xb5918au,0x938786u,0x897f7fu,0x736461u,
+0x6f5c5bu,0x74635cu,0x80736bu,0x897f7eu,0x918889u,0x958c8du,0x979193u,0x969293u,0x9b9798u,
+0x6d6d6bu,0x565654u,0x71716fu,0x757573u,0x6f6e6au,0x83827eu,0xa4a5a0u,0xa5a5a3u,0x383637u,
+0x3f383au,0x54454au,0x5d484fu,0x574248u,0x5d474cu,0x5d464bu,0x5f484cu,0x5e4948u,0x6c5454u,
+0x7b5b5cu,0x886365u,0x8f6d63u,0x906e67u,0x8b6766u,0x7c585cu,0x6a4143u,0x623538u,0x754448u,
+0x8a555bu,0x97636eu,0xa97076u,0x9b6565u,0x9a706cu,0xa78d8du,0x948a89u,0x89817fu,0x726560u,
+0x6e5c58u,0x71625fu,0x80726fu,0x897f7du,0x91888au,0x958c8fu,0x969092u,0x979394u,0x989495u,
+0x6b6b6bu,0x545454u,0x727272u,0x767676u,0x71706cu,0x848381u,0xa5a5a4u,0xa4a4a4u,0x535152u,
+0x3e393bu,0x584d51u,0x58484eu,0x4a3a3fu,0x564347u,0x5c474bu,0x624c4fu,0x624c4eu,0x664e4eu,
+0x735557u,0x846263u,0x8d6c67u,0x977470u,0x8e6b67u,0x744e4bu,0x794f50u,0x865a5bu,0x835558u,
+0x865559u,0x87575eu,0x8f595cu,0x976461u,0xad8683u,0xa08988u,0x928987u,0x89817fu,0x736461u,
+0x6e5c58u,0x71625fu,0x80726fu,0x897f7du,0x91888au,0x958c8fu,0x969092u,0x979394u,0x989495u,
+0x6a6a6cu,0x515153u,0x717173u,0x747476u,0x727170u,0x848283u,0xadadafu,0xb3b3b5u,0x9b999au,
+0x282627u,0x201d1eu,0x252022u,0x3d3236u,0x514446u,0x554548u,0x5f4b4du,0x624c4eu,0x664d50u,
+0x6d5354u,0x785a5cu,0x826263u,0x92706eu,0x96716bu,0x926c63u,0x865d57u,0x784f4bu,0x6e4243u,
+0x5e3134u,0x623839u,0x825250u,0xa27570u,0xa78580u,0x9b8888u,0x8f8989u,0x877f80u,0x746563u,
+0x6f5d59u,0x726360u,0x7d6f6cu,0x897f7du,0x908789u,0x948b8eu,0x979193u,0x969293u,0x989495u,
+0x38373cu,0x39383du,0x434247u,0x4e4d52u,0x555356u,0x716f72u,0xa3a2a7u,0xb1b0b5u,0x9c9a9bu,
+0x6c6c6cu,0x1e201fu,0x161a19u,0x2a2627u,0x4e4546u,0x4e3f41u,0x544143u,0x594547u,0x604a4cu,
+0x644b4eu,0x694f50u,0x715351u,0x82635fu,0x8b6660u,0x906860u,0x987066u,0xa47c74u,0xa77f7du,
+0xae8687u,0xb4908du,0xbf948fu,0xba918bu,0xac9089u,0x948383u,0x8d8888u,0x867e80u,0x736363u,
+0x6e5c58u,0x71625fu,0x7d6f6cu,0x897f7du,0x8f8688u,0x938a8du,0x969092u,0x959192u,0x989495u,
+0x2d2d2fu,0x2c2c2eu,0x2c2c2eu,0x2c2c2eu,0x2d2c31u,0x2d2c31u,0x2c2b30u,0x353439u,0x6b6b6du,
+0xa1a1a3u,0x353537u,0x1b1b1du,0x22201eu,0x53494au,0x493a3du,0x413738u,0x473b39u,0x514342u,
+0x5c494au,0x5f4a4cu,0x644e49u,0x715a54u,0x7d6058u,0x88685du,0x936e6au,0x9c7675u,0xa27f7eu,
+0xa58586u,0xa78387u,0xa87f84u,0xad8588u,0xa48583u,0x8c8485u,0x8f8989u,0x887e7eu,0x706462u,
+0x6d5c58u,0x70615cu,0x7d6f6eu,0x887e7du,0x8f8688u,0x938a8du,0x938d8fu,0x969293u,0x979394u,
+0x2a2a2cu,0x29292bu,0x29292bu,0x29292bu,0x29282du,0x29282du,0x2a292eu,0x29282du,0x2b2b2du,
+0x5b5b5du,0x78787au,0x2a2a2cu,0x232220u,0x5a5152u,0x4a3e40u,0x3d3334u,0x3c3130u,0x433737u,
+0x4c3e3eu,0x534244u,0x564444u,0x5c4846u,0x68504eu,0x6f5551u,0x745553u,0x7d5e5eu,0x816463u,
+0x836567u,0x816466u,0x7e6063u,0x7b6061u,0x7a6665u,0x8e8789u,0x8e8888u,0x887e7du,0x6f6462u,
+0x6d5c58u,0x70615cu,0x7c6e6du,0x867c7bu,0x8e8588u,0x91888bu,0x928c8eu,0x959192u,0x979394u,
+0x29292bu,0x29292bu,0x272729u,0x272729u,0x28282au,0x262628u,0x29292bu,0x28282au,0x28282au,
+0x2a2a2cu,0x454547u,0x414143u,0x484443u,0x64605fu,0x4a4343u,0x413738u,0x392f2eu,0x372d2cu,
+0x3b3130u,0x3e3433u,0x433638u,0x443538u,0x463637u,0x473637u,0x453937u,0x493b3au,0x4c3c3cu,
+0x4a3b38u,0x4c3535u,0x453232u,0x4c403eu,0x8b8281u,0x908a8bu,0x8e8888u,0x897f7eu,0x706563u,
+0x6d5c58u,0x70615cu,0x7c6e6du,0x877d7cu,0x8e8588u,0x90878au,0x928c8eu,0x928e8fu,0x959192u,
+0x262628u,0x262628u,0x252527u,0x29292bu,0x2f2f31u,0x3a3a3cu,0x343436u,0x2c2c2eu,0x222224u,
+0x19191bu,0x18181au,0x424244u,0x746e6eu,0x706f6du,0x5f5a59u,0x453b3cu,0x3d3435u,0x372e2fu,
+0x312b2bu,0x312b2bu,0x322a28u,0x322a28u,0x32292au,0x33292au,0x302529u,0x34282au,0x392b2bu,
+0x3f2f2fu,0x483030u,0x514241u,0x979191u,0x8f898bu,0x908a8cu,0x8e8888u,0x887e7du,0x6e6361u,
+0x6c5b57u,0x6f605bu,0x7b6d6cu,0x857b7au,0x8e8588u,0x90878au,0x928c8eu,0x928e8fu,0x959192u,
+0x3a3a3au,0x434343u,0x424242u,0x3f3f3fu,0x383838u,0x323232u,0x2b2b2bu,0x232323u,0x202020u,
+0x1b1b1bu,0x171717u,0x1b1b1bu,0x595859u,0x6c6c6cu,0x6e6e6eu,0x605f5fu,0x403738u,0x3b3633u,
+0x342f2bu,0x322826u,0x342a28u,0x342a28u,0x342927u,0x372928u,0x382828u,0x3d2b2bu,0x3f2d2cu,
+0x4b3736u,0x58443du,0x7f6262u,0x554a48u,0x928e8eu,0x8c8889u,0x8b8587u,0x877d7cu,0x716362u,
+0x6a5c5bu,0x6e605du,0x786d67u,0x857979u,0x8d8487u,0x90878au,0x918b8du,0x949091u,0x938f90u,
+0x333333u,0x2f2f2fu,0x2c2c2cu,0x292929u,0x262626u,0x232323u,0x232323u,0x222222u,0x212121u,
+0x1d1d1du,0x1b1b1bu,0x181818u,0x191919u,0x515151u,0x787878u,0x6f6f6fu,0x61615fu,0x3e3536u,
+0x443535u,0x3f3131u,0x392e2cu,0x3b2d2cu,0x3d2f2eu,0x3f2f2fu,0x432f30u,0x4a3637u,0x513c3bu,
+0x5c4746u,0x755955u,0x816965u,0x564646u,0x4a4343u,0x908c8du,0x8d8789u,0x857b7au,0x6f6160u,
+0x685a5au,0x6d5f5cu,0x766b65u,0x847878u,0x8b8285u,0x8f8689u,0x8f898bu,0x928e8fu,0x938f90u,
+0x292929u,0x292929u,0x262626u,0x252525u,0x252525u,0x242424u,0x222222u,0x222222u,0x202020u,
+0x202020u,0x1c1c1cu,0x191919u,0x1a1a1au,0x1f1f1fu,0x666666u,0x888888u,0x79777au,0x656364u,
+0x41383bu,0x473438u,0x443434u,0x493737u,0x4a3838u,0x4d393au,0x533a3du,0x5d4447u,0x6b5152u,
+0x7a6061u,0x876a65u,0x846663u,0x473a36u,0x5c5150u,0x706b6du,0x8b8587u,0x857b7au,0x706261u,
+0x665858u,0x6d5f5cu,0x746963u,0x827676u,0x8c8386u,0x8e8588u,0x8e888au,0x918d8eu,0x928e8fu,
+0x242424u,0x242424u,0x252525u,0x232323u,0x222222u,0x212121u,0x202020u,0x202020u,0x1f1f1fu,
+0x1f1f1fu,0x1d1d1du,0x1a1a1au,0x151515u,0x171717u,0x303030u,0x888888u,0x8f9094u,0x757678u,
+0x676669u,0x494647u,0x533f40u,0x564243u,0x594345u,0x654c4fu,0x6f5558u,0x83666au,0x896c6eu,
+0x8e7072u,0x916f69u,0x8d6f6bu,0x534441u,0x433435u,0x5c5759u,0x797375u,0x837978u,0x6e605fu,
+0x665858u,0x6d5f5cu,0x736862u,0x817575u,0x8a8184u,0x8d8487u,0x8c8688u,0x8f8b8cu,0x928e8fu,
+0x232323u,0x212121u,0x232323u,0x232323u,0x222222u,0x212121u,0x1f1f1fu,0x1f1f1fu,0x212121u,
+0x1f1f1fu,0x1e1e1eu,0x1e1e1eu,0x1a1a1au,0x171717u,0x1a1a1au,0x717171u,0xa4a5a5u,0x979797u,
+0x797979u,0x646464u,0x4c4e4du,0x5d565bu,0x655455u,0x6f545au,0x856266u,0x957376u,0x927371u,
+0x8f706eu,0x93706bu,0x7f615eu,0x604a48u,0x594849u,0x807476u,0x534c4cu,0x3f3a39u,0x5f5757u,
+0x645653u,0x6d5e5bu,0x746663u,0x7f7471u,0x878082u,0x8b8587u,0x8c8889u,0x8d898au,0x8d8b8cu,
+0x232323u,0x212121u,0x222222u,0x222222u,0x222222u,0x212121u,0x1f1f1fu,0x1f1f1fu,0x1f1f1fu,
+0x1e1e1eu,0x1c1c1cu,0x1c1c1cu,0x1b1b1bu,0x181818u,0x181818u,0x272727u,0x939393u,0xa7a7a7u,
+0x919191u,0x787878u,0x67686au,0x5a585eu,0x807783u,0x7f7278u,0x71575bu,0x907376u,0x8c6c6du,
+0x8c6d6au,0x967470u,0x856864u,0x3f2a29u,0x635354u,0x918688u,0x736d6du,0x242321u,0x302a2au,
+0x362e2cu,0x5a504eu,0x716664u,0x817372u,0x867f80u,0x898385u,0x8b8788u,0x8c8889u,0x8d8b8cu,
+0x232323u,0x202020u,0x202020u,0x202020u,0x202020u,0x202020u,0x202020u,0x1e1e1eu,0x1e1e1eu,
+0x1d1d1du,0x1d1d1du,0x1b1b1bu,0x1c1c1cu,0x1c1c1cu,0x181818u,0x191919u,0x323234u,0x99999bu,
+0xa3a3a5u,0x88888au,0x717173u,0x77777au,0x535360u,0x84868eu,0x91868au,0x6c575bu,0x846466u,
+0x8d6e6bu,0x9d7c77u,0x896d6au,0x3e292au,0x5c4d50u,0x978f8fu,0x6c6b69u,0x1f1f1du,0x22211fu,
+0x21211fu,0x272524u,0x3c3435u,0x63585au,0x857d80u,0x868082u,0x8b8788u,0x8b8788u,0x8a8889u,
+0x212121u,0x222222u,0x202020u,0x202020u,0x202020u,0x202020u,0x202020u,0x1e1e1eu,0x1e1e1eu,
+0x1d1d1du,0x1d1d1du,0x1b1b1bu,0x1a1a1au,0x1a1a1au,0x191919u,0x161616u,0x1a1a1cu,0x303032u,
+0x88888au,0x959597u,0x7b7a78u,0x90908eu,0x7e8081u,0x434553u,0x77797eu,0x9e8e94u,0x8c6e70u,
+0x927371u,0x9a7b78u,0x846a67u,0x3d2a2au,0x695a5du,0x9b9494u,0x464644u,0x1c1e1bu,0x20201eu,
+0x201e1fu,0x211f20u,0x222021u,0x272526u,0x5c5658u,0x857f81u,0x898586u,0x898586u,0x8a8889u,
+0x1f1f1fu,0x1f1f1fu,0x1e1e1eu,0x1e1e1eu,0x1e1e1cu,0x1d1d1bu,0x1f1f1du,0x1f1f1du,0x1f1d1eu,
+0x1f1d1eu,0x1e1c1du,0x1c1a1bu,0x1a1a1au,0x1a1a1au,0x1b1b1bu,0x1b1b1bu,0x161616u,0x181818u,
+0x2b2b2bu,0x626263u,0x7d7f7fu,0x7c7e7eu,0x818383u,0x707175u,0x525659u,0x65595cu,0x84696bu,
+0x937573u,0x90716fu,0x7e6465u,0x483638u,0x645a5fu,0x7b787eu,0x353337u,0x201f23u,0x211f21u,
+0x1c1f1eu,0x1d1f1eu,0x202221u,0x212221u,0x292524u,0x84807fu,0x878384u,0x898586u,0x8b8788u,
+0x1e1e1eu,0x1e1e1eu,0x1f1f1fu,0x1f1f1fu,0x1f1f1du,0x1d1d1bu,0x1e1e1cu,0x1e1e1cu,0x1d1b1cu,
+0x1d1b1cu,0x1d1b1cu,0x1b191au,0x1a1a1au,0x1a1a1au,0x1b1b1bu,0x1b1b1bu,0x1a1819u,0x191718u,
+0x181617u,0x1f1d1eu,0x3d3d3du,0x6b6b6bu,0x9c9c9cu,0x9b9b9bu,0x8a8f90u,0x999192u,0x887172u,
+0x937472u,0x8d6c6du,0x6f5455u,0x776b6bu,0x8a8687u,0x323133u,0x1c1b1cu,0x1c1c1bu,0x1c1c1au,
+0x1a1b1cu,0x1a1b1cu,0x1d1e1fu,0x1d1e1fu,0x201c1au,0x484242u,0x888282u,0x8a8486u,0x8a8687u
+);
+vec3 getPixel(int col,int row){
+    uint p=P[row*IMG_W+col];
+    return vec3(float((p>>16u)&255u),float((p>>8u)&255u),float(p&255u))/255.0;
+}
+vec3 sampleRow(int col,float rowF){
+    int r0=clamp(int(floor(rowF)),0,IMG_H-1);
+    int r1=clamp(r0+1,0,IMG_H-1);
+    return mix(getPixel(col,r0),getPixel(col,r1),fract(rowF));
+}
+void mainImage(out vec4 outColor,in vec2 fragCoord){
+    vec2 res=u_res;
+    float scale=min(res.x/float(IMG_W),res.y/float(IMG_H));
+    vec2 gridPx=vec2(float(IMG_W),float(IMG_H))*scale;
+    vec2 origin=(res-gridPx)*0.5;
+    vec2 local=fragCoord-origin;
+    if(local.x<0.0||local.y<0.0||local.x>=gridPx.x||local.y>=gridPx.y){
+        outColor=vec4(0.08,0.08,0.08,1.0);return;
+    }
+    vec2 cellF=local/scale;
+    ivec2 cell=ivec2(floor(cellF));
+    vec2 cellPos=fract(cellF);
+    float border=GRID/scale;
+    if(cellPos.x<border||cellPos.y<border||cellPos.x>1.0-border||cellPos.y>1.0-border){
+        outColor=vec4(0.12,0.12,0.12,1.0);return;
+    }
+    int col=cell.x;
+    int row=(IMG_H-1)-cell.y;
+    float bob=sin(u_t*2.1)*0.4;
+    float influence=smoothstep(float(BG_ROWS)-1.0,float(BG_ROWS)+1.0,float(row));
+    float srcRowF=float(row)+bob*influence;
+    outColor=vec4(sampleRow(col,srcRowF),1.0);
+}
+void main(){mainImage(fragColor,gl_FragCoord.xy);}
+`;
+
+const SHADERS = [
+{
+name:"The Eye",
+fs:`precision mediump float;
+uniform vec2 u_res;
+uniform float u_t;
+
+float hash12(vec2 p){
+  vec3 p3=fract(vec3(p.xyx)*.1031);
+  p3+=dot(p3,p3.yzx+33.33);
+  return fract((p3.x+p3.y)*p3.z);}
+
+vec2 hash22(vec2 p){
+  vec3 p3=fract(vec3(p.xyx)*vec3(.1031,.1030,.0973));
+  p3+=dot(p3,p3.yzx+33.33);
+  return fract((p3.xx+p3.yz)*p3.zy);}
+
+vec2 rot2(vec2 st,float a){return mat2(cos(a),-sin(a),sin(a),cos(a))*st;}
+
+float st(float a,float b,float s){return smoothstep(a-s,a+s,b);}
+
+float noise(in vec2 p){
+  vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);
+  return mix(mix(dot(hash22(i+vec2(0,0)),f-vec2(0,0)),
+                 dot(hash22(i+vec2(1,0)),f-vec2(1,0)),u.x),
+             mix(dot(hash22(i+vec2(0,1)),f-vec2(0,1)),
+                 dot(hash22(i+vec2(1,1)),f-vec2(1,1)),u.x),u.y);}
+
+void mainImage(out vec4 O,in vec2 g){
+  vec2 r=u_res,uv=(g+g-r)/r.y,sh,u,id,lc,t;
+  vec3 f;
+  float xd,yd,h;
+  float sm=3./r.y;
+  vec2 uvc=uv;
+  float eDist=length(uvc);
+
+  sh=vec2(noise(uvc*vec2(.4,.6)+u_t*.05),0.)*.04;
+  u=uvc+sh;
+  yd=55.;
+  id=vec2((eDist+.01)*yd,0.);
+  xd=max(.5,floor(id.x))*.12;
+  h=(hash12(floor(id.xx))*.5+.25)*(u_t+10.)*.12;
+  t=rot2(u,h);
+  id.y=atan(t.y,t.x)*xd;
+  lc=fract(id);
+  id-=lc;
+  t=vec2(cos((id.y+.5)/xd)*(id.x+.5)/yd,
+         sin((id.y+.5)/xd)*(id.x+.5)/yd);
+  t=rot2(t,-h)-sh;
+  h=noise(t*vec2(.6,1.2));
+  h=smoothstep(.04,.20,h);
+  lc+=noise(lc*vec2(1.,4.)+id)*vec2(.7,.2);
+
+  float tc=u_t*.025;
+  vec3 hue=.5+.5*cos(6.28318*(tc+vec3(0.,.33,.67)));
+  hue=clamp(hue+(hash12(id)-.5)*.07,0.,1.);
+
+  float radT=eDist/0.62;
+  float pupilIn=smoothstep(0.,.28,radT);
+  float edgeFade=smoothstep(.50,1.40,radT);
+  vec3 irisBase=mix(hue*.08,hue,pupilIn);
+  vec3 edgeCol=vec3(0.);
+  vec3 gapCol=mix(irisBase*.36,edgeCol*.93,edgeFade);
+  vec3 segCol=mix(mix(irisBase,irisBase*1.30,h),edgeCol,edgeFade);
+  f=mix(gapCol,segCol,st(abs(lc.x-.5),.42,sm*yd)*st(abs(lc.y-.5),.47,sm*xd));
+
+  {
+    float pm=smoothstep(.22+sm*6.,.22-sm*6.,eDist);
+    vec2 puv=uvc/.22;
+    vec2 gpuv=rot2(puv,.60);
+    float band=exp(-gpuv.y*gpuv.y*7.);
+    vec3 gc=vec3(.005,.002,.012);
+    vec2 nUV=gpuv*vec2(2.5,9.);
+    float neb=noise(nUV)*.52+noise(nUV*2.1)*.26+noise(nUV*4.3)*.13;
+    neb=max(0.,neb)*band;
+    gc+=vec3(.10,.13,.32)*neb*.55;
+    gc+=vec3(.30,.08,.18)*neb*.30;
+    float cd=length(puv*vec2(1.,1.2)-vec2(.08,0.));
+    gc+=vec3(.92,.68,.28)*exp(-cd*cd*13.)*.95;
+    gc+=vec3(.35,.20,.65)*exp(-cd*cd*42.)*.55;
+    for(int lvl=0;lvl<4;lvl++){
+      float fl=float(lvl);
+      float scale=10.+fl*9.;
+      vec2 suv=puv*scale;
+      vec2 sid=floor(suv);
+      vec2 slc=fract(suv)-.5;
+      vec2 sOff=(hash22(sid+fl*7.3)-.5)*.65;
+      float sDist=length(slc-sOff);
+      float sVal=hash12(sid+fl*3.1);
+      float thr=.68-band*.22;
+      float sFac=max(0.,sVal-thr)/(1.-thr);
+      float glow=smoothstep(.09,0.,sDist)*sFac;
+      vec3 sCol=mix(vec3(.80,.88,1.),vec3(1.,.88,.55),
+                    smoothstep(.75,.80,hash12(sid+fl*11.)));
+      gc+=sCol*glow*(1.3+band*.5);}
+    gc=clamp(gc,0.,1.);
+    f=mix(f,vec3(0.),pm);
+    f=mix(f,gc,pm*.5);
+  }
+
+  f=mix(f,vec3(1.,.99,.97),smoothstep(.055,.016,length(uvc-vec2(-.14,.19))));
+  f=mix(f,vec3(.70,.68,.66),smoothstep(.022,.005,length(uvc-vec2(.11,.14))));
+  O=vec4(f,1.);}
+
+void main(){mainImage(gl_FragColor,gl_FragCoord.xy);}
+`
+},
+{
+name:"Chromatic Tides",
+fs:`precision mediump float;
+uniform vec2 u_res;uniform float u_t;
+float wave(vec2 uv,float f,float s,float a,float ph){
+  return sin(uv.x*f+u_t*s+ph)*a;}
+void main(){
+  vec2 uv=gl_FragCoord.xy/u_res;
+  float t=u_t;float hz=.52;
+  if(uv.y>hz){
+    float sy=(uv.y-hz)/(1.-hz);
+    vec3 c=mix(vec3(.75,.42,.12),vec3(.08,.04,.22),sy);
+    float sx=.5+sin(t*.018)*.1;
+    float sd=length(uv-vec2(sx,hz+.12));
+    c+=vec3(1.,.9,.55)*exp(-sd*22.)*.9;
+    c+=vec3(1.,.55,.15)*exp(-sd*5.)*.35;
+    gl_FragColor=vec4(c,1);
+  } else {
+    float d=uv.y/hz;
+    float w1=wave(uv,7.,.85,.032,0.);
+    float w2=wave(uv,12.,-.52,.022,1.5);
+    float w3=wave(uv,20.,1.25,.012,3.);
+    float w4=wave(uv,4.6,.32,.044,.7);
+    float w5=wave(uv,31.,2.1,.006,5.2);
+    float tw=w1+w2+w3+w4+w5;
+    vec3 deep=vec3(.015,.07,.22),shal=vec3(.04,.30,.52),foam=vec3(.88,.94,1.);
+    vec3 wc=mix(deep,shal,d*.75+tw+.3);
+    wc.r+=tw*3.*.14;wc.b-=tw*3.*.07;
+    wc=mix(wc,foam,smoothstep(.038,.072,tw)*.5);
+    float sx=.5+sin(t*.018)*.1;
+    float refl=exp(-pow(uv.x-sx-tw*2.,2.)*18.);
+    wc+=vec3(1.,.8,.4)*refl*.14*d;
+    gl_FragColor=vec4(wc,1);
+  }
+}`
+},
+{
+name:"Stellar Nursery",
+fs:`precision mediump float;
+uniform vec2 u_res;uniform float u_t;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<6;i++){v+=a*n(p);p*=2.1;a*=.48;}return v;}
+void main(){
+  vec2 uv=gl_FragCoord.xy/u_res;uv.x*=u_res.x/u_res.y;
+  float t=u_t*.038;
+  vec3 col=vec3(0.,0.,.018);
+  float n1=fbm(uv*2.6+vec2(t,t*.3));
+  float n2=fbm(uv*3.9-vec2(t*.65,t*.5));
+  float n3=fbm(uv*6.2+vec2(t*.38,-t*.75));
+  col+=vec3(.08,.18,.85)*pow(n1,1.6)*1.9;
+  col+=vec3(.48,.09,.72)*pow(n2,1.3)*1.5;
+  col+=vec3(.92,.38,.04)*pow(n3,2.1)*1.3;
+  col+=vec3(.0,.58,.48)*n1*n2*2.1;
+  float core=fbm(uv*4.2-t*.45);
+  col+=vec3(1.,.92,.72)*pow(core,4.5)*2.2;
+  vec2 su=uv*155.;vec2 sc=floor(su),sf=fract(su)-.5;
+  float sr=h(sc);
+  if(sr>.925){
+    float br=(sr-.925)*13.;
+    float tw=.7+.3*sin(u_t*(3.+h(sc+.5)*7.));
+    col+=mix(vec3(.72,.82,1.),vec3(1.,.92,.7),h(sc*2.3))*br*tw*exp(-length(sf)*26.);
+  }
+  col=col/(col+.5);col=pow(col,vec3(.84));
+  gl_FragColor=vec4(col,1);
+}`
+},
+{
+name:"Geometric Reverie",
+fs:`precision mediump float;
+uniform vec2 u_res;uniform float u_t;
+vec3 pal(float t){
+  return .5+.5*cos(6.2832*(vec3(0.,.33,.67)+t));}
+float sdHex(vec2 p,float r){p=abs(p);return max(dot(p,normalize(vec2(1.,1.732051))),p.x)-r;}
+mat2 rot(float a){return mat2(cos(a),-sin(a),sin(a),cos(a));}
+void main(){
+  vec2 uv=gl_FragCoord.xy/u_res;
+  uv=uv*2.-1.;uv.x*=u_res.x/u_res.y;
+  float t=u_t*.14;
+  vec3 col=vec3(0);
+  for(int i=0;i<4;i++){
+    float fi=float(i);
+    float sc=2.6+fi*1.9;
+    float dir=fi>1.5?-1.:1.;
+    vec2 p=rot(t*(1.+fi*.28)*dir)*uv*sc;
+    vec2 hc=round(p/vec2(1.,.866)*.5)*vec2(2.,1.732);
+    float hd=sdHex(p-hc,.94);
+    float edge=smoothstep(.05,.0,abs(hd)-.008);
+    float fill=smoothstep(0.,-.42,hd)*.14;
+    float ct=length(hc)*.09+t*.28+fi*.26;
+    col+=pal(ct)*(edge*.42+fill)/(fi+1.);
+  }
+  float r=length(uv),th=atan(uv.y,uv.x);
+  float segs=8.;
+  float sym=abs(mod(th/(3.14159/segs),2.)-1.);
+  float mand=sin(r*16.-t*3.)*.5+.5;
+  mand*=sin(sym*12.)*.5+.5;
+  mand*=exp(-r*1.6);
+  col+=pal(r-t*.18)*mand*1.6;
+  col*=1.3-smoothstep(.55,1.35,r);
+  gl_FragColor=vec4(col,1);
+}`
+}
+];
+
+// ─────────────────────────────────────────────
+// WEBGL HELPERS
+// ─────────────────────────────────────────────
+function initGL(canvas, fsrc) {
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) return null;
+    function compile(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src); gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+            console.error(gl.getShaderInfoLog(s));
+        return s;
+    }
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fsrc));
+    gl.linkProgram(prog);
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    const pos = gl.getAttribLocation(prog, 'a_pos');
+    return {
+        gl, prog, buf, pos,
+        res: gl.getUniformLocation(prog, 'u_res'),
+        tim: gl.getUniformLocation(prog, 'u_t')
+    };
+}
+
+function initGL2(canvas, fsrc) {
+    const gl = canvas.getContext('webgl2');
+    if (!gl) return null;
+    const VS2 = `#version 300 es\nin vec2 a_pos;\nvoid main(){gl_Position=vec4(a_pos,0,1);}`;
+    function compile(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src); gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+            console.error(gl.getShaderInfoLog(s));
+        return s;
+    }
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS2));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fsrc));
+    gl.linkProgram(prog);
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    const pos = gl.getAttribLocation(prog, 'a_pos');
+    return {
+        gl, prog, buf, pos,
+        res: gl.getUniformLocation(prog, 'u_res'),
+        tim: gl.getUniformLocation(prog, 'u_t')
+    };
+}
+
+function draw(ctx, t) {
+    if (!ctx) return;
+    const {gl, prog, buf, pos, res, tim} = ctx;
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.enableVertexAttribArray(pos);
+    gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+    gl.uniform2f(res, gl.canvas.width, gl.canvas.height);
+    gl.uniform1f(tim, t);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+}
+
+function fitCanvas(c) {
+    const dpr = window.devicePixelRatio || 1;
+    c.width  = c.clientWidth  * dpr;
+    c.height = c.clientHeight * dpr;
+}
+
+// ─────────────────────────────────────────────
+// INIT CANVASES
+// ─────────────────────────────────────────────
+const portC = document.getElementById('portrait-canvas');
+fitCanvas(portC);
+
+const portCtx = initGL2(portC, PORTRAIT_FS);
+
+const paintCtxs = SHADERS.map((s, i) => {
+    const c = document.getElementById('canvas-' + i);
+    fitCanvas(c);
+    return initGL(c, s.fs);
+});
+
+// ─────────────────────────────────────────────
+// GLSL SYNTAX HIGHLIGHT
+// ─────────────────────────────────────────────
+const KEYWORDS = /\b(void|float|vec2|vec3|vec4|mat2|mat3|int|bool|uniform|attribute|varying|precision|mediump|highp|lowp|for|if|else|return|const|in|out|inout)\b/g;
+const BUILTINS = /\b(sin|cos|tan|abs|floor|fract|mod|mix|smoothstep|step|length|normalize|dot|cross|pow|exp|log|sqrt|clamp|max|min|atan|sign|round|ceil)\b/g;
+const TYPES    = /\b(gl_FragColor|gl_FragCoord|gl_Position)\b/g;
+
+function highlight(code) {
+    const esc = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return esc
+        .replace(/(\/\/[^\n]*)/g, '<span class="cm">$1</span>')
+        .replace(KEYWORDS, '<span class="kw">$1</span>')
+        .replace(BUILTINS, '<span class="bi">$1</span>')
+        .replace(TYPES,    '<span class="tp">$1</span>')
+        .replace(/\b(\d+\.?\d*)\b/g, '<span class="nm">$1</span>');
+}
+
+SHADERS.forEach((s, i) => {
+    const pre = document.getElementById('pre-' + i);
+    if (pre) pre.innerHTML = highlight(s.fs);
+});
+
+// ─────────────────────────────────────────────
+// PROGRESS DOTS
+// ─────────────────────────────────────────────
+const dotsEl = document.getElementById('dots');
+const wrappers = Array.from(document.querySelectorAll('.room-wrapper'));
+
+wrappers.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.addEventListener('click', () => {
+        wrappers[i].scrollIntoView({behavior:'smooth'});
+    });
+    dotsEl.appendChild(d);
+});
+
+const dotEls = Array.from(dotsEl.querySelectorAll('.dot'));
+
+// ─────────────────────────────────────────────
+// SCROLL ANIMATION
+// ─────────────────────────────────────────────
+const infoCols = wrappers.map((_, i) => document.getElementById('panel-' + i));
+
+function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+const scrollCue = document.querySelector('.scroll-cue');
+
+function updateScroll() {
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    const mobile = window.innerWidth <= 768;
+
+    if (scrollCue) scrollCue.style.opacity = clamp01(1 - scrollY / 120).toFixed(3);
+
+    wrappers.forEach((wrapper, i) => {
+        const top   = wrapper.getBoundingClientRect().top + scrollY;
+        const range = wrapper.offsetHeight - vh;
+        const prog  = clamp01((scrollY - top) / range);
+
+        // Info col: opacity 0→1, translateY 22px→0 over prog 0.05→0.30
+        const infoP = ease(clamp01((prog - 0.05) / 0.25));
+        const shift = mobile ? 12 : 22;
+        infoCols[i].style.opacity   = infoP.toFixed(4);
+        infoCols[i].style.transform = `translateY(${((1 - infoP) * shift).toFixed(2)}px)`;
+
+        // 3. Progress dots active when prog 0.05→0.95
+        if (prog > 0.05 && prog < 0.95) dotEls[i].classList.add('active');
+        else dotEls[i].classList.remove('active');
+    });
+}
+
+window.addEventListener('scroll', updateScroll, { passive: true });
+updateScroll();
+
+// ─────────────────────────────────────────────
+// CODE TOGGLE
+// ─────────────────────────────────────────────
+document.querySelectorAll('.code-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const drawerId = btn.dataset.drawer;
+        const drawer = document.getElementById(drawerId);
+        const open = drawer.classList.toggle('open');
+        btn.classList.toggle('open', open);
+        btn.querySelector('.arrow').innerHTML = open ? '&#9660;' : '&#9654;';
+        btn.childNodes[1].textContent = open ? ' Hide GLSL Source' : ' View GLSL Source';
+    });
+});
+
+// ─────────────────────────────────────────────
+// RENDER LOOP
+// ─────────────────────────────────────────────
+const t0 = performance.now();
+
+function animate() {
+    const t = (performance.now() - t0) * 0.001;
+    draw(portCtx, t);
+    paintCtxs.forEach(ctx => draw(ctx, t));
+    requestAnimationFrame(animate);
+}
+animate();
+
+// Resize handler
+window.addEventListener('resize', () => {
+    fitCanvas(portC);
+    document.querySelectorAll('.painting-canvas').forEach(fitCanvas);
+    updateScroll();
+});
+</script>
+</body>
+</html>
