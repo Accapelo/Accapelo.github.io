@@ -63,10 +63,6 @@
         .nav-links a:hover { color: var(--ink); }
 
         /* ── ARTIST INTRO ROOM ── */
-        .artist-intro-wrapper {
-            height: 120vh;
-        }
-
         .room-shell--intro {
             background: #1c1410 !important;
         }
@@ -267,12 +263,9 @@
 
         /* ── MUSEUM ROOM LAYOUT ── */
         .room-wrapper {
-            height: 125vh;
             position: relative;
         }
         .room-shell {
-            position: sticky;
-            top: 0;
             height: 100vh;
             overflow: hidden;
             display: flex;
@@ -471,6 +464,7 @@
             transform: translateY(22px);
             will-change: opacity, transform;
             overflow: hidden;
+            transition: opacity 0.6s ease 0.25s, transform 0.6s ease 0.25s;
         }
         .info-eyebrow {
             font-size: 0.6rem;
@@ -644,8 +638,6 @@
                 padding: 20px 20px;
                 justify-content: flex-start;
                 overflow-y: auto;
-                opacity: 0;
-                transform: translateY(12px);
             }
             .info-title { font-size: 1.8rem; }
             .info-desc { font-size: 0.82rem; line-height: 1.75; margin-bottom: 18px; }
@@ -1310,36 +1302,40 @@ const dotEls = Array.from(dotsEl.querySelectorAll('.dot'));
 const infoCols = wrappers.map((_, i) => document.getElementById('panel-' + i));
 
 function clamp01(v) { return Math.max(0, Math.min(1, v)); }
-function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
 
-const scrollCue = document.querySelector('.scroll-cue');
-
-function updateScroll() {
-    const scrollY = window.scrollY;
-    const vh = window.innerHeight;
-    const mobile = window.innerWidth <= 768;
-
-    if (scrollCue) scrollCue.style.opacity = clamp01(1 - scrollY / 120).toFixed(3);
-
-    wrappers.forEach((wrapper, i) => {
-        const top   = wrapper.getBoundingClientRect().top + scrollY;
-        const range = wrapper.offsetHeight - vh;
-        const prog  = clamp01((scrollY - top) / range);
-
-        // Info col: opacity 0→1, translateY 22px→0 over prog 0.05→0.30
-        if (infoCols[i]) {
-            const infoP = ease(clamp01((prog - 0.05) / 0.25));
-            const shift = mobile ? 12 : 22;
-            infoCols[i].style.opacity   = infoP.toFixed(4);
-            infoCols[i].style.transform = `translateY(${((1 - infoP) * shift).toFixed(2)}px)`;
+// Fade in info panels as they enter the viewport
+const panelObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
         }
-
-        // 3. Progress dots active when prog 0.05→0.95
-        if (prog > 0.05 && prog < 0.95) dotEls[i].classList.add('active');
-        else dotEls[i].classList.remove('active');
     });
-}
+}, { threshold: 0.8 });
 
+infoCols.forEach(col => { if (col) panelObserver.observe(col); });
+
+// Progress dots: active while the room is in view
+const shellObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        const idx = parseInt(entry.target.closest('[data-idx]').dataset.idx);
+        if (dotEls[idx]) {
+            if (entry.isIntersecting) dotEls[idx].classList.add('active');
+            else dotEls[idx].classList.remove('active');
+        }
+    });
+}, { threshold: 0.5 });
+
+wrappers.forEach(w => {
+    const shell = w.querySelector('.room-shell');
+    if (shell) shellObserver.observe(shell);
+});
+
+// Scroll cue fade
+const scrollCue = document.querySelector('.scroll-cue');
+function updateScroll() {
+    if (scrollCue) scrollCue.style.opacity = clamp01(1 - window.scrollY / 120).toFixed(3);
+}
 window.addEventListener('scroll', updateScroll, { passive: true });
 updateScroll();
 
@@ -1358,14 +1354,31 @@ document.querySelectorAll('.code-toggle').forEach(btn => {
 });
 
 // ─────────────────────────────────────────────
-// RENDER LOOP
+// RENDER LOOP — only draw visible canvases
 // ─────────────────────────────────────────────
 const t0 = performance.now();
+const visibleCtxs = new Set();
+
+const canvasObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        const ctx = entry.target._glCtx;
+        if (!ctx) return;
+        if (entry.isIntersecting) visibleCtxs.add(ctx);
+        else visibleCtxs.delete(ctx);
+    });
+}, { threshold: 0.01 });
+
+portC._glCtx = portCtx;
+canvasObserver.observe(portC);
+
+paintCtxs.forEach((ctx, i) => {
+    const c = document.getElementById('canvas-' + i);
+    if (c) { c._glCtx = ctx; canvasObserver.observe(c); }
+});
 
 function animate() {
     const t = (performance.now() - t0) * 0.001;
-    draw(portCtx, t);
-    paintCtxs.forEach(ctx => draw(ctx, t));
+    visibleCtxs.forEach(ctx => draw(ctx, t));
     requestAnimationFrame(animate);
 }
 animate();
