@@ -1330,7 +1330,7 @@ function draw(ctx, t) {
 }
 
 function fitCanvas(c) {
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     c.width  = c.clientWidth  * dpr;
     c.height = c.clientHeight * dpr;
 }
@@ -1428,7 +1428,13 @@ const scrollCue = document.querySelector('.scroll-cue');
 function updateScroll() {
     if (scrollCue) scrollCue.style.opacity = clamp01(1 - window.scrollY / 120).toFixed(3);
 }
-window.addEventListener('scroll', updateScroll, { passive: true });
+let scrollTicking = false;
+window.addEventListener('scroll', () => {
+    if (!scrollTicking) {
+        requestAnimationFrame(() => { updateScroll(); scrollTicking = false; });
+        scrollTicking = true;
+    }
+}, { passive: true });
 updateScroll();
 
 // ─────────────────────────────────────────────
@@ -1468,18 +1474,28 @@ paintCtxs.forEach((ctx, i) => {
     if (c) { c._glCtx = ctx; canvasObserver.observe(c); }
 });
 
-function animate() {
-    const t = (performance.now() - t0) * 0.001;
-    visibleCtxs.forEach(ctx => draw(ctx, t));
+const FRAME_MIN_MS = 1000 / 30;
+let lastFrameTime = -FRAME_MIN_MS;
+
+function animate(now) {
+    if (now - lastFrameTime >= FRAME_MIN_MS) {
+        lastFrameTime = now;
+        const t = (now - t0) * 0.001;
+        visibleCtxs.forEach(ctx => draw(ctx, t));
+    }
     requestAnimationFrame(animate);
 }
-animate();
+animate(0);
 
 // Resize handler
+let resizeTimer = null;
 window.addEventListener('resize', () => {
-    fitCanvas(portC);
-    document.querySelectorAll('.painting-canvas').forEach(fitCanvas);
-    updateScroll();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        fitCanvas(portC);
+        document.querySelectorAll('.painting-canvas').forEach(fitCanvas);
+        updateScroll();
+    }, 150);
 });
 </script>
 </body>
