@@ -782,16 +782,28 @@
         </div>
     </div>
 
-    <!-- Room 2: empty -->
+    <!-- Room 2: Stained Glass Eye (room-flip) -->
     <div class="room-wrapper room-flip" data-idx="2">
         <div class="room-shell">
             <div class="room-body">
                 <div class="room-edge-l"></div>
                 <div class="room-edge-r"></div>
                 <div class="room-grid">
-                    <div class="paint-col"></div>
+                    <div class="paint-col">
+                        <canvas class="painting-canvas" id="canvas-2"></canvas>
+                        <div class="painting-placard">
+                            <div class="plaque-title">Stained Glass Eye</div>
+                            <div class="plaque-meta">Tobias Eriksson &middot; 2026</div>
+                        </div>
+                    </div>
                     <div class="info-col" id="panel-2">
-                        <h2 class="info-title">More coming soon</h2>
+                        <p class="info-eyebrow">The Observational Series</p>
+                        <h2 class="info-title">Stained Glass Eye</h2>
+                        <p class="info-year">2026 &middot; GLSL / WebGL &middot; Real-time</p>
+                        <div class="info-rule"></div>
+                        <p class="info-desc">Fractal colour folds into an iris — a kaleidoscopic pattern of folded planes, edged in sharp light where panes of glass would meet. At the centre an eye looks out, its pupil drifting in unhurried saccades from one point of focus to another. The gaze inverts the surrounding field as it roves, bending geometry inward so that every new fixation warps the stained glass around it.</p>
+                        <button class="code-toggle" data-drawer="drawer-2"><span class="arrow">&#9654;</span> View GLSL Source</button>
+                        <div class="code-drawer" id="drawer-2"><pre id="pre-2"></pre></div>
                     </div>
                 </div>
             </div>
@@ -1270,6 +1282,47 @@ void mainImage(out vec4 O,in vec2 g){
   }
   f=mix(skyBg,skyFg,st(abs(lc.x-.5),.4,sm*yd)*st(abs(lc.y-.5),.48,sm*xd));
   O=vec4(f,1.);}
+void main(){mainImage(gl_FragColor,gl_FragCoord.xy);}
+`
+},
+{
+name:"Stained Glass Eye",
+fs:`precision mediump float;
+uniform vec2 u_res;
+uniform float u_t;
+vec2 pupilPos(float t){
+  float tick=floor(t*.35),phase=fract(t*.35),snap=smoothstep(0.,.07,phase);
+  float a0=fract(sin(tick*127.1+311.7)*43758.5)*6.2832;
+  float r0=fract(sin(tick*419.2+132.1)*23421.6)*.5;
+  float a1=fract(sin((tick+1.)*127.1+311.7)*43758.5)*6.2832;
+  float r1=fract(sin((tick+1.)*419.2+132.1)*23421.6)*.5;
+  return mix(vec2(cos(a0),sin(a0))*r0,vec2(cos(a1),sin(a1))*r1,snap);}
+void imageSample(out vec4 f,in vec2 w){
+  float t=.001*u_t+.3;
+  vec2 nw=(2.*w-u_res)/u_res.y*4.;
+  float eyeR=1.5,r2=dot(nw,nw);
+  vec2 pupil=pupilPos(u_t),rel=nw-pupil;
+  nw=mix(nw,pupil+rel*(eyeR*eyeR)/max(dot(rel,rel),1e-4),step(r2,eyeR*eyeR));
+  vec4 p=abs(vec4(nw,nw.x,nw.x)),c=p*.0;
+  p.yx*=60.*t*.3;t*=.9;
+  for(int _d=0;_d<10;_d++){
+    float d=.2+float(_d)*.3;
+    p-=.5*d;
+    for(int i=0;i<8;i++) p.xy=mat2(cos(t),sin(t),-sin(t),cos(t))*(p.xy+sign(p.yx)*vec2(-.2,1.6));
+    c+=.1*p;c=mod(c,4.);c*=w.y/u_res.y;}
+  f=c;}
+void mainImage(out vec4 f,in vec2 w){
+  vec4 s1,s2,s3,s4;float d=1.2;
+  imageSample(s1,w+vec2(-d,0.));imageSample(s2,w+vec2(+d,0.));
+  imageSample(s3,w+vec2(0.,-d));imageSample(s4,w+vec2(0.,+d));
+  s1.xyzw=vec4(s1.x+s1.y+s1.z);s2.xyzw=vec4(s2.x+s2.y+s2.z);
+  imageSample(f,w);
+  f-=abs(s1-s2)*20.;f-=abs(s3-s4)*20.;
+  vec2 uv=(2.*w-u_res)/u_res.y*4.;
+  float r=length(uv);
+  f=mix(f,vec4(1.),.8*smoothstep(1.5,1.3,r));
+  f*=smoothstep(-.05,.1,length(uv-pupilPos(u_t))-.45);
+  f*=1.-.5*smoothstep(.04,0.,abs(r-1.5));}
 void main(){mainImage(gl_FragColor,gl_FragCoord.xy);}
 `
 }
