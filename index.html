@@ -712,6 +712,51 @@
             background: rgba(255,255,255,0.6);
             transition: width 0.15s linear;
         }
+        #webcam-face {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 130px;
+            aspect-ratio: 4/3;
+            border-radius: 8px;
+            object-fit: cover;
+            transform: scaleX(-1);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            border: 1px solid rgba(255,255,255,0.15);
+            z-index: 7;
+        }
+        #webcam-face.visible { opacity: 1; }
+        .cam-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            border: 1px solid rgba(120,90,40,0.4);
+            color: #7a5820;
+            padding: 10px 22px;
+            font-size: 0.68rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: background 0.25s, border-color 0.25s;
+            margin-top: 18px;
+            width: fit-content;
+        }
+        .cam-toggle:hover { background: rgba(120,90,40,0.08); border-color: rgba(120,90,40,0.7); }
+        .cam-toggle.active { background: rgba(120,90,40,0.06); border-color: #7a5820; }
+        #face-cam-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #3fba6a;
+            opacity: 0;
+            flex-shrink: 0;
+            transition: opacity 0.3s;
+        }
+        .cam-toggle.active #face-cam-dot { opacity: 1; }
     </style>
 </head>
 <body>
@@ -874,6 +919,7 @@
                 <div class="room-grid">
                     <div class="paint-col" id="face-col">
                         <canvas id="face-canvas"></canvas>
+                        <video id="webcam-face" autoplay playsinline muted></video>
                         <div id="face-loading">
                             <div id="face-bar-track"><div id="face-bar"></div></div>
                         </div>
@@ -887,7 +933,12 @@
                         <h2 class="info-title">Multi-camera photogrammetry scan</h2>
                         <p class="info-year">2019 &middot; Three.js / Blender &middot; Interactive</p>
                         <div class="info-rule"></div>
-                        <p class="info-desc">Story time. While I was doing an internship in Shanghai during my last year of university the company had a multi-camera photogrammetry rig with 100+ cameras that they allowed me and another friend to scan our faces in (since we were shaved and hair does not work well with this technique). They mostly wanted assets for potential game characters in the future but were nice enough to give us the files as well for free use. While the original 3D model display every pore and imperfection on my face in crazy detail it is also above 1GB+ in size which makes it not too great for web viewing. I've managed to compress in to <5mb while still maintaining most of its details and structure to display it here. It's also pretty fun to have your 23 year old self immortalized like this in computer form.</p>
+                        <p class="info-desc">While I was doing an internship in Shanghai during my last year of university the company had a multi-camera photogrammetry rig with 100+ cameras that they allowed me and another friend to scan our faces in (since we were shaved and hair does not work well with this technique). They mostly wanted assets for potential game characters in the future but were nice enough to give us the files as well for free use. While the original 3D model display every pore and imperfection on my face in crazy detail it is also above 1GB+ in size which makes it not too great for web viewing. I've managed to compress in to &lt;10mb while still maintaining most of its details and structure to display it here. It's also pretty fun to have your 23 year old self immortalized like this in computer form.</p>
+                        <button class="cam-toggle" id="face-cam-btn" disabled>
+                            <span id="face-cam-dot"></span>
+                            <span id="face-cam-label">Control my head using webcam</span>
+                        </button>
+                        <p style="margin-top:12px;font-size:0.65rem;color:var(--ink-muted);font-style:italic;opacity:0.7;">* Since I am not a professional animator the face tracking animations are very bare-boned.</p>
                     </div>
                 </div>
             </div>
@@ -1637,18 +1688,25 @@ window.addEventListener('resize', () => {
 }
 </script>
 <script type="module">
-import * as THREE        from 'three';
-import { GLTFLoader }    from 'three/addons/loaders/GLTFLoader.js';
-import { DRACOLoader }   from 'three/addons/loaders/DRACOLoader.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import * as THREE           from 'three';
+import { GLTFLoader }       from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader }      from 'three/addons/loaders/DRACOLoader.js';
+import { MeshoptDecoder }   from 'three/addons/libs/meshopt_decoder.module.js';
+import { OrbitControls }    from 'three/addons/controls/OrbitControls.js';
 
-const col    = document.getElementById('face-col');
-const canvas = document.getElementById('face-canvas');
+const col      = document.getElementById('face-col');
+const canvas   = document.getElementById('face-canvas');
+const video    = document.getElementById('webcam-face');
+const camBtn   = document.getElementById('face-cam-btn');
+const camLabel = document.getElementById('face-cam-label');
+const barEl    = document.getElementById('face-bar');
+const loadEl   = document.getElementById('face-loading');
+const hintEl   = document.getElementById('face-hint');
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.outputColorSpace  = THREE.SRGBColorSpace;
-renderer.toneMapping       = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace    = THREE.SRGBColorSpace;
+renderer.toneMapping         = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.1;
 
 const scene = new THREE.Scene();
@@ -1668,23 +1726,23 @@ rim.position.set(0, -1, -2);
 scene.add(rim);
 
 const controls = new OrbitControls(camera, canvas);
-controls.enableDamping    = true;
-controls.dampingFactor    = 0.06;
-controls.autoRotate       = true;
-controls.autoRotateSpeed  = 0.5;
-controls.minDistance      = 0.5;
-controls.maxDistance      = 5000;
-
-const barEl   = document.getElementById('face-bar');
-const loadEl  = document.getElementById('face-loading');
-const hintEl  = document.getElementById('face-hint');
+controls.enableDamping   = true;
+controls.dampingFactor   = 0.06;
+controls.autoRotate      = true;
+controls.autoRotateSpeed = 0.5;
+controls.minDistance     = 0.5;
+controls.maxDistance     = 5000;
 
 canvas.addEventListener('pointerdown', () => hintEl.classList.add('hidden'), { once: true });
+
+// ── Load model ────────────────────────────────────────────────────────────────
+let pivot = null;
 
 const draco = new DRACOLoader();
 draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/libs/draco/');
 const loader = new GLTFLoader();
 loader.setDRACOLoader(draco);
+loader.setMeshoptDecoder(MeshoptDecoder);
 
 loader.load(
     'TV3-web.glb',
@@ -1701,14 +1759,19 @@ loader.load(
 
         const center = new THREE.Box3().setFromObject(obj).getCenter(new THREE.Vector3());
         obj.position.sub(center);
-        scene.add(obj);
+
+        pivot = new THREE.Group();
+        pivot.add(obj);
+        scene.add(pivot);
 
         camera.position.set(0, 0, 2000 / scale);
         controls.target.set(0, 0, 0);
         controls.update();
+        controls.saveState();
 
         loadEl.classList.add('hidden');
         setTimeout(() => { loadEl.style.display = 'none'; }, 700);
+        camBtn.disabled = false;
     },
     (xhr) => {
         if (xhr.total) barEl.style.width = Math.round(xhr.loaded / xhr.total * 100) + '%';
@@ -1716,6 +1779,94 @@ loader.load(
     (err) => { console.error('GLB load error:', err); }
 );
 
+// ── Face tracking ─────────────────────────────────────────────────────────────
+let faceLandmarker = null;
+let tracking       = false;
+
+const _q   = new THREE.Quaternion();
+const _pos = new THREE.Vector3();
+const _scl = new THREE.Vector3();
+const _mat = new THREE.Matrix4();
+
+function applyFacePose(matData) {
+    _mat.fromArray(matData);
+    const e = _mat.elements;
+    e[1] *= -1; e[2]  *= -1;
+    e[4] *= -1; e[8]  *= -1;
+    e[13]*= -1; e[14] *= -1;
+    _mat.decompose(_pos, _q, _scl);
+    pivot.quaternion.copy(_q);
+}
+
+async function startTracking() {
+    camLabel.textContent = 'Initialising…';
+    camBtn.disabled = true;
+    try {
+        if (!faceLandmarker) {
+            const { FaceLandmarker, FilesetResolver } = await import(
+                'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.12/vision_bundle.mjs'
+            );
+            const vision = await FilesetResolver.forVisionTasks(
+                'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.12/wasm'
+            );
+            faceLandmarker = await FaceLandmarker.createFromOptions(vision, {
+                baseOptions: {
+                    modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
+                    delegate: 'GPU'
+                },
+                outputFacialTransformationMatrixes: true,
+                outputFaceBlendshapes: true,
+                runningMode: 'VIDEO',
+                numFaces: 1
+            });
+        }
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+        video.srcObject = stream;
+        await video.play();
+
+        tracking = true;
+        pivot.quaternion.identity();
+        controls.reset();
+        controls.enabled    = false;
+        controls.autoRotate = false;
+        camBtn.classList.add('active');
+        camLabel.textContent = 'Stop webcam';
+        video.classList.add('visible');
+        hintEl.classList.add('hidden');
+    } catch (err) {
+        console.error('Face tracking error:', err);
+        if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+            camLabel.textContent = 'Camera denied';
+        } else if (location.protocol === 'file:') {
+            camLabel.textContent = 'Needs localhost';
+        } else {
+            camLabel.textContent = 'Failed — see console';
+        }
+        setTimeout(() => { camLabel.textContent = 'Control my head using webcam'; }, 3000);
+    }
+    camBtn.disabled = false;
+}
+
+function stopTracking() {
+    if (video.srcObject) {
+        video.srcObject.getTracks().forEach(t => t.stop());
+        video.srcObject = null;
+    }
+    tracking = false;
+    controls.enabled    = true;
+    controls.autoRotate = true;
+    if (pivot) pivot.quaternion.identity();
+    camBtn.classList.remove('active');
+    camLabel.textContent = 'Control my head using webcam';
+    video.classList.remove('visible');
+}
+
+camBtn.addEventListener('click', () => {
+    if (!pivot) return;
+    tracking ? stopTracking() : startTracking();
+});
+
+// ── Size sync ─────────────────────────────────────────────────────────────────
 function syncSize() {
     const w = col.clientWidth, h = col.clientHeight;
     if (!w || !h) return;
@@ -1726,14 +1877,32 @@ function syncSize() {
 syncSize();
 new ResizeObserver(syncSize).observe(col);
 
+// ── Visibility ────────────────────────────────────────────────────────────────
 let faceVisible = false;
 new IntersectionObserver(
     (entries) => { faceVisible = entries[0].isIntersecting; },
     { threshold: 0.01 }
 ).observe(canvas);
 
+// ── Render loop ───────────────────────────────────────────────────────────────
 renderer.setAnimationLoop(() => {
     if (!faceVisible) return;
+    if (tracking && video.readyState >= 2) {
+        const result = faceLandmarker.detectForVideo(video, performance.now());
+        if (result.facialTransformationMatrixes?.length) {
+            applyFacePose(result.facialTransformationMatrixes[0].data);
+        }
+        if (result.faceBlendshapes?.length) {
+            pivot.traverse(child => {
+                if (child.isMesh && child.morphTargetDictionary) {
+                    result.faceBlendshapes[0].categories.forEach(({ categoryName, score }) => {
+                        const idx = child.morphTargetDictionary[categoryName];
+                        if (idx !== undefined) child.morphTargetInfluences[idx] = score;
+                    });
+                }
+            });
+        }
+    }
     controls.update();
     renderer.render(scene, camera);
 });
