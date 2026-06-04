@@ -655,6 +655,14 @@
             #panel-3 .info-rule   { order: 5; }
             #panel-3 .info-desc   { order: 6; }
 
+            #game-start-btn       { margin-top: 0; margin-bottom: 6px; }
+            #panel-4 #game-start-btn   { order: 1; }
+            #panel-4 #game-round-display { order: 2; margin-top: 0; margin-bottom: 18px; }
+            #panel-4 .info-title  { order: 3; }
+            #panel-4 .info-year   { order: 4; }
+            #panel-4 .info-rule   { order: 5; }
+            #panel-4 .info-desc   { order: 6; }
+
             .progress-dots { display: none; }
 
             footer { padding: 50px 24px; }
@@ -1058,7 +1066,7 @@
                         <div class="info-rule"></div>
                         <p class="info-desc">A game built on the rigged face model and Google's MediaPipe landmark detection. The left model holds a randomised expression — jaw open, raised brows, a smile — and you have 10 seconds to match it with your own face via webcam. At the end of each round your pose is scored 0–1000. Five rounds, then your total is revealed.</p>
                         <button id="game-start-btn" disabled>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            <span id="game-btn-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
                             <span id="game-btn-label">Start game</span>
                         </button>
                         <p id="game-round-display"></p>
@@ -2055,6 +2063,9 @@ const gameOverTot  = document.getElementById('game-over-total');
 const gamePlayBtn  = document.getElementById('game-play-again');
 const gameStartBtn = document.getElementById('game-start-btn');
 const gameBtnLabel = document.getElementById('game-btn-label');
+const gameBtnIcon  = document.getElementById('game-btn-icon');
+const ICON_PLAY = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+const ICON_STOP = `<svg width="14" height="14" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="8" fill="#e05050"/></svg>`;
 const gameRoundEl  = document.getElementById('game-round-display');
 
 // ── Renderer ──────────────────────────────────────────────────────────────────
@@ -2208,9 +2219,6 @@ function showGameOver() {
     gameTimerEl.style.display = 'none';
     gameOverTot.textContent  = `${totalScore} / ${TOTAL_ROUNDS * 1000}`;
     gameOverEl.classList.add('show');
-    gameStartBtn.classList.remove('active');
-    gameBtnLabel.textContent = 'Start game';
-    playing = false;
 }
 
 function hideGameOver() {
@@ -2251,15 +2259,17 @@ async function startGame() {
         hideGameOver();
         playing = true;
         gameStartBtn.classList.add('active');
+        gameBtnIcon.innerHTML    = ICON_STOP;
         gameBtnLabel.textContent = 'Stop game';
         gameStartBtn.disabled    = false;
+        gameCol.scrollIntoView({ behavior: 'smooth', block: 'start' });
         startRound();
     } catch (err) {
         console.error('Game start error:', err);
         if (err.name === 'NotAllowedError') gameBtnLabel.textContent = 'Camera denied';
         else if (location.protocol === 'file:') gameBtnLabel.textContent = 'Needs localhost';
         else gameBtnLabel.textContent = 'Failed — see console';
-        setTimeout(() => { gameBtnLabel.textContent = 'Start game'; }, 3000);
+        setTimeout(() => { gameBtnIcon.innerHTML = ICON_PLAY; gameBtnLabel.textContent = 'Start game'; }, 3000);
         gameStartBtn.disabled = false;
     }
 }
@@ -2282,6 +2292,7 @@ function stopGame() {
     if (pivotPlayer) pivotPlayer.quaternion.identity();
     gameRoundEl.textContent  = '';
     gameStartBtn.classList.remove('active');
+    gameBtnIcon.innerHTML    = ICON_PLAY;
     gameBtnLabel.textContent = 'Start game';
 }
 
@@ -2295,6 +2306,7 @@ gamePlayBtn.addEventListener('click', () => {
     roundNum   = 0;
     playing    = true;
     gameStartBtn.classList.add('active');
+    gameBtnIcon.innerHTML    = ICON_STOP;
     gameBtnLabel.textContent = 'Stop game';
     startRound();
 });
