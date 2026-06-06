@@ -190,6 +190,106 @@
             text-decoration-color: rgba(201,169,110,0.75);
         }
 
+        /* ── CERTIFICATIONS TREE ── */
+        .cert-tree {
+            margin: 14px 0;
+            border: 1px solid rgba(201,169,110,0.2);
+        }
+        .cert-header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            text-align: left;
+            transition: background 0.2s;
+        }
+        .cert-header:hover { background: rgba(201,169,110,0.06); }
+        .cert-arrow { display: inline-block; transition: transform 0.25s; font-size: 0.55rem; flex-shrink: 0; line-height: 1; }
+        .cert-header.open .cert-arrow,
+        .cert-cat-header.open .cert-arrow { transform: rotate(90deg); }
+
+        .cert-body {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1);
+            border-top: 1px solid transparent;
+        }
+        .cert-body.open {
+            max-height: 1400px;
+            border-top-color: rgba(201,169,110,0.15);
+        }
+
+        .cert-category { border-bottom: 1px solid rgba(201,169,110,0.1); }
+        .cert-category:last-child { border-bottom: none; }
+        .cert-cat-header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            padding: 8px 14px 8px 26px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.62rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(201,169,110,0.7);
+            text-align: left;
+            transition: background 0.2s;
+        }
+        .cert-cat-header:hover { background: rgba(201,169,110,0.05); }
+
+        .cert-cat-body {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+        .cert-cat-body.open { max-height: 500px; }
+
+        .cert-issuer-group {
+            padding: 6px 14px 8px 38px;
+            border-bottom: 1px solid rgba(201,169,110,0.06);
+        }
+        .cert-issuer-group:last-child { border-bottom: none; padding-bottom: 10px; }
+        .cert-issuer {
+            font-size: 0.57rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: rgba(201,169,110,0.45);
+            margin-bottom: 4px;
+        }
+        .cert-issuer-group ul { list-style: none; padding: 0; margin: 0; }
+        .cert-issuer-group li {
+            font-size: 0.71rem;
+            color: #9a8f7e;
+            padding: 2px 0 2px 12px;
+            position: relative;
+        }
+        .cert-issuer-group li::before {
+            content: '–';
+            position: absolute;
+            left: 0;
+            color: rgba(201,169,110,0.35);
+        }
+        .cert-issuer-group a {
+            color: #9a8f7e;
+            text-decoration: underline;
+            text-decoration-color: rgba(201,169,110,0.22);
+            text-underline-offset: 3px;
+            transition: color 0.2s, text-decoration-color 0.2s;
+        }
+        .cert-issuer-group a:hover { color: var(--gold); text-decoration-color: rgba(201,169,110,0.7); }
+
         .artist-stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -877,9 +977,109 @@
                         <span class="bio-skill">Contentful</span>
                         <span class="bio-skill">Power Platform</span>
                         <span class="bio-skill">SEO / WCAG / GDPR</span>
-                        <span class="bio-skill">AI / Anthropic</span>
+                        <span class="bio-skill">AI / Claude</span>
                         <span class="bio-skill">Java</span>
                         <span class="bio-skill">C#</span>
+                    </div>
+                    <div class="cert-tree">
+                        <button class="cert-header" data-cert-target="cert-body-main">
+                            <span class="cert-arrow">&#9654;</span> Certifications
+                        </button>
+                        <div class="cert-body" id="cert-body-main">
+                            <div class="cert-category">
+                                <button class="cert-cat-header" data-cert-target="cert-cat-ai">
+                                    <span class="cert-arrow">&#9654;</span> AI &amp; Machine Learning
+                                </button>
+                                <div class="cert-cat-body" id="cert-cat-ai">
+                                    <div class="cert-issuer-group">
+                                        <p class="cert-issuer">Anthropic</p>
+                                        <ul>
+                                            <li><a href="https://verify.skilljar.com/c/22adji8cg5sk" target="_blank" rel="noopener">Building with the Claude API</a></li>
+                                            <li><a href="https://verify.skilljar.com/c/u36xwd688ahu" target="_blank" rel="noopener">Claude 101</a></li>
+                                            <li><a href="https://verify.skilljar.com/c/x3nwkqy25p6o" target="_blank" rel="noopener">Claude Code 101</a></li>
+                                            <li><a href="https://verify.skilljar.com/c/qx8ch6qyyuu9" target="_blank" rel="noopener">Claude Code in Action</a></li>
+                                            <li><a href="https://verify.skilljar.com/c/7qx6n2hfpmbf" target="_blank" rel="noopener">Introduction to Agent Skills</a></li>
+                                            <li><a href="https://verify.skilljar.com/c/qgdjfimeo2hf" target="_blank" rel="noopener">Introduction to Claude Cowork</a></li>
+                                            <li><a href="https://verify.skilljar.com/c/wik8fconfq2j" target="_blank" rel="noopener">Introduction to Model Context Protocol</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cert-category">
+                                <button class="cert-cat-header" data-cert-target="cert-cat-cloud">
+                                    <span class="cert-arrow">&#9654;</span> Cloud &amp; Infrastructure
+                                </button>
+                                <div class="cert-cat-body" id="cert-cat-cloud">
+                                    <div class="cert-issuer-group">
+                                        <p class="cert-issuer">Microsoft</p>
+                                        <ul>
+                                            <li><a href="https://learn.microsoft.com/sv-se/users/tobiaseriksson-4453/transcript/d5lxzbr6wqg63em" target="_blank" rel="noopener">Microsoft Certified: Azure Fundamentals</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="cert-issuer-group">
+                                        <p class="cert-issuer">Consid AB</p>
+                                        <ul>
+                                            <li><a href="cert/Certificate_Tobias Eriksson_Kubernetes för utvecklare.pdf" target="_blank" rel="noopener">Kubernetes for Developers</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cert-category">
+                                <button class="cert-cat-header" data-cert-target="cert-cat-security">
+                                    <span class="cert-arrow">&#9654;</span> Security
+                                </button>
+                                <div class="cert-cat-body" id="cert-cat-security">
+                                    <div class="cert-issuer-group">
+                                        <p class="cert-issuer">Consid AB</p>
+                                        <ul>
+                                            <li><a href="cert/Certificate_Tobias Eriksson_Writing secure code.pdf" target="_blank" rel="noopener">Writing Secure Code</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cert-category">
+                                <button class="cert-cat-header" data-cert-target="cert-cat-ux">
+                                    <span class="cert-arrow">&#9654;</span> Accessibility &amp; UX
+                                </button>
+                                <div class="cert-cat-body" id="cert-cat-ux">
+                                    <div class="cert-issuer-group">
+                                        <p class="cert-issuer">Consid AB</p>
+                                        <ul>
+                                            <li><a href="cert/Certificate_Tobias Eriksson_Digital tillgänglighet.pdf" target="_blank" rel="noopener">Digital Accessibility</a></li>
+                                            <li><a href="cert/Certificate_Tobias Eriksson_WCAG för utvecklare.pdf" target="_blank" rel="noopener">WCAG for Developers</a></li>
+                                            <li><a href="cert/Certificate_Tobias Eriksson_UX & Design Thinking .pdf" target="_blank" rel="noopener">UX &amp; Design Thinking</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cert-category">
+                                <button class="cert-cat-header" data-cert-target="cert-cat-data">
+                                    <span class="cert-arrow">&#9654;</span> Data &amp; Analytics
+                                </button>
+                                <div class="cert-cat-body" id="cert-cat-data">
+                                    <div class="cert-issuer-group">
+                                        <p class="cert-issuer">Consid AB</p>
+                                        <ul>
+                                            <li><a href="cert/Certificate_Tobias Eriksson_Power BI.pdf" target="_blank" rel="noopener">Power BI</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cert-category">
+                                <button class="cert-cat-header" data-cert-target="cert-cat-prog">
+                                    <span class="cert-arrow">&#9654;</span> Programming
+                                </button>
+                                <div class="cert-cat-body" id="cert-cat-prog">
+                                    <div class="cert-issuer-group">
+                                        <p class="cert-issuer">Oracle</p>
+                                        <ul>
+                                            <li><a href="https://www.youracclaim.com/badges/a0b69526-0c06-45c4-a178-fb535ff868ef/linked_in_profile" target="_blank" rel="noopener">Oracle Certified Professional, Java SE 8 Programmer</a></li>
+                                            <li><a href="https://www.credly.com/badges/93afed35-0314-4da0-b32b-e6997a46ca3b/linked_in_profile" target="_blank" rel="noopener">Oracle Certified Associate, Java SE 8 Programmer</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="bio-lists-row">
                         <ul class="bio-certs">
@@ -1081,7 +1281,7 @@
 
 <footer>
     <div class="footer-logo">Accapelo.github.io</div>
-    <p>Portfolio of Tobias Eriksson &mdash; Senior System Developer. GLSL paintings rendered in real time.</p>
+    <p>Portfolio of Tobias Eriksson &mdash; Senior System Developer.</p>
     <p style="margin-top:8px;opacity:0.45;">Skövde &nbsp;&middot;&nbsp; Sweden</p>
 </footer>
 
@@ -1744,6 +1944,14 @@ document.querySelectorAll('.code-toggle').forEach(btn => {
         btn.classList.toggle('open', open);
         btn.querySelector('.arrow').innerHTML = open ? '&#9660;' : '&#9654;';
         btn.childNodes[1].textContent = open ? ' Hide GLSL Source' : ' View GLSL Source';
+    });
+});
+
+document.querySelectorAll('.cert-header, .cert-cat-header').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const panel = document.getElementById(btn.dataset.certTarget);
+        const open = panel.classList.toggle('open');
+        btn.classList.toggle('open', open);
     });
 });
 
