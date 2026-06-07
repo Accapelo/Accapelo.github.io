@@ -793,9 +793,44 @@
             white-space: nowrap;
             pointer-events: none;
             z-index: 6;
+            opacity: 0;
             transition: opacity 0.5s ease;
         }
-        #face-hint.hidden { opacity: 0; }
+        #face-hint.visible { opacity: 1; }
+        #face-hint.hidden  { opacity: 0; }
+        #face-activate {
+            position: absolute;
+            inset: 0;
+            z-index: 7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0.05) 65%);
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+        #face-activate span {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.8);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 999px;
+            padding: 12px 26px;
+            background: rgba(0,0,0,0.35);
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+        #face-activate:hover span {
+            background: rgba(0,0,0,0.5);
+            border-color: rgba(255,255,255,0.55);
+            color: #fff;
+        }
+        #face-activate.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
         #face-loading {
             position: absolute;
             inset: 0;
@@ -1204,6 +1239,7 @@
                 <div class="room-grid">
                     <div class="paint-col" id="face-col">
                         <canvas id="face-canvas"></canvas>
+                        <button id="face-activate" type="button"><span>Click to enable rotation &amp; zoom</span></button>
                         <video id="webcam-face" autoplay playsinline muted></video>
                         <div id="face-loading">
                             <div id="face-bar-track"><div id="face-bar"></div></div>
@@ -2034,6 +2070,7 @@ const camLabel = document.getElementById('face-cam-label');
 const barEl    = document.getElementById('face-bar');
 const loadEl   = document.getElementById('face-loading');
 const hintEl   = document.getElementById('face-hint');
+const activateBtn = document.getElementById('face-activate');
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -2064,8 +2101,15 @@ controls.autoRotate      = true;
 controls.autoRotateSpeed = 0.5;
 controls.minDistance     = 0.5;
 controls.maxDistance     = 5000;
+controls.enabled         = false;
 
 canvas.addEventListener('pointerdown', () => hintEl.classList.add('hidden'), { once: true });
+
+activateBtn.addEventListener('click', () => {
+    controls.enabled = true;
+    activateBtn.classList.add('hidden');
+    hintEl.classList.add('visible');
+});
 
 // ── Loader setup ──────────────────────────────────────────────────────────────
 const draco = new DRACOLoader();
@@ -2159,6 +2203,7 @@ async function startTracking() {
         camLabel.textContent = 'Stop webcam';
         video.classList.add('visible');
         hintEl.classList.add('hidden');
+        activateBtn.classList.add('hidden');
         col.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (err) {
         console.error('Face tracking error:', err);
