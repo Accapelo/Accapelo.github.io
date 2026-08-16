@@ -148,6 +148,242 @@
             padding: 3px 7px;
         }
 
+        /* ── BIO TABS ── */
+        .bio-tabs {
+            display: flex;
+            gap: 0;
+            margin-top: 14px;
+            width: 100%;
+            border-bottom: 2px solid var(--gold);
+        }
+        .bio-tab {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.74rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid rgba(201,169,110,0.18);
+            border-radius: 0;
+            padding: 6px 14px;
+            cursor: pointer;
+            position: relative;
+            margin-right: -1px;
+            transition: color 0.2s, border-color 0.2s, background 0.2s;
+        }
+        .bio-tab:first-child { border-radius: 3px 0 0 3px; }
+        .bio-tab:last-child  { border-radius: 0 3px 3px 0; margin-right: 0; }
+        .bio-tab:hover {
+            color: rgba(240,235,227,0.8);
+            border-color: rgba(201,169,110,0.38);
+            z-index: 1;
+        }
+        .bio-tab.active {
+            color: var(--gold);
+            border-color: rgba(201,169,110,0.55);
+            background: rgba(201,169,110,0.06);
+            z-index: 1;
+        }
+        .bio-tab-panel { display: none; }
+        .bio-tab-panel.active { display: block; }
+
+        /* ── WORK EXPERIENCE TIMELINE ── */
+        .work-tl-wrap { margin: 14px 0 18px; }
+        .work-tl-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .work-tl-seg {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            text-align: left;
+            font-family: inherit;
+        }
+        .work-tl-seg:hover .work-seg-bar { filter: brightness(1.3); }
+        .work-tl-seg.active {
+            background: rgba(201,169,110,0.08);
+            border-radius: 3px;
+            outline: 1px solid rgba(201,169,110,0.45);
+            outline-offset: 2px;
+        }
+        .work-tl-seg.active .work-seg-bar {
+            filter: brightness(1.6);
+        }
+        .work-tl-seg.active .work-seg-name {
+            color: rgba(240,235,227,0.95) !important;
+        }
+        .work-seg-bar {
+            height: 7px;
+            border-radius: 2px;
+            flex-shrink: 0;
+            margin-bottom: 4px;
+        }
+        .work-tl-seg--a .work-seg-bar { background: rgba(180,130,60,0.45); }
+        .work-tl-seg--b .work-seg-bar { background: rgba(180,130,60,0.72); }
+        .work-tl-seg--c .work-seg-bar { background: rgba(201,169,110,0.92); }
+        .work-seg-name {
+            font-size: 0.8rem;
+            letter-spacing: 0.06em;
+            line-height: 1.3;
+        }
+        .work-tl-seg--a .work-seg-name { color: rgba(180,130,60,0.7); }
+        .work-tl-seg--b .work-seg-name { color: rgba(180,130,60,0.85); }
+        .work-tl-seg--c .work-seg-name { color: rgba(201,169,110,0.95); }
+        .work-seg-period {
+            font-size: 0.8rem;
+            letter-spacing: 0.04em;
+            color: rgba(255,255,255,0.3);
+            margin-top: 1px;
+        }
+
+        /* ── WORK DETAIL PANEL ── */
+        .work-proj-detail {
+            margin-top: 8px;
+            padding: 10px 14px;
+            border-left: 2px solid var(--proj-border, rgba(180,130,60,0.72));
+            border-radius: 0 3px 3px 0;
+            background: rgba(255,255,255,0.015);
+            transition: border-color 0.2s, opacity 0.18s;
+        }
+        .work-proj-detail.is-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            color: rgba(154,143,126,0.45);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+        }
+        .work-entry-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 2px 8px;
+            margin-bottom: 8px;
+        }
+        .work-co {
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+        .work-period {
+            font-size: 0.8rem;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+        }
+        .work-proj {
+            margin-bottom: 10px;
+            padding-left: 10px;
+            border-left: 1px solid rgba(201,169,110,0.15);
+        }
+        .work-proj:last-child { margin-bottom: 0; }
+        .work-proj-name {
+            font-size: 0.8rem;
+            color: rgba(240,235,227,0.85);
+            margin-bottom: 2px;
+        }
+        .work-award {
+            font-size: 0.8rem;
+            color: var(--gold);
+            letter-spacing: 0.05em;
+        }
+        .work-proj-tech {
+            font-size: 0.8rem;
+            color: rgba(201,169,110,0.58);
+            letter-spacing: 0.06em;
+            margin-bottom: 3px;
+        }
+        .work-proj-desc {
+            font-size: 0.8rem;
+            color: #9a8f7e;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .work-proj-desc:last-child { margin-bottom: 0; }
+
+        /* ── PROJECT SCREENSHOTS ── */
+        .proj-screenshots {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 12px;
+        }
+        .proj-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: zoom-in;
+            display: block;
+            transition: opacity 0.15s, transform 0.15s;
+        }
+        .proj-thumb:hover { opacity: 0.85; transform: scale(1.01); }
+        .proj-scroll-link {
+            color: var(--gold);
+            text-decoration: underline;
+            text-decoration-color: rgba(201,169,110,0.4);
+            text-underline-offset: 2px;
+            transition: text-decoration-color 0.15s;
+        }
+        .proj-scroll-link:hover { text-decoration-color: var(--gold); }
+
+        /* ── LIGHTBOX ── */
+        .lb-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.93);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .lb-overlay.open { display: flex; }
+        .lb-img {
+            max-width: 90vw;
+            max-height: 88vh;
+            object-fit: contain;
+            border-radius: 4px;
+            user-select: none;
+            pointer-events: none;
+        }
+        .lb-close {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.55);
+            font-size: 2rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+        .lb-close:hover { color: #fff; }
+        .lb-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.55);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 12px 15px;
+            border-radius: 4px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .lb-nav:hover { background: rgba(255,255,255,0.14); color: #fff; }
+        .lb-prev { left: 16px; }
+        .lb-next { right: 16px; }
+
         /* Certifications + Contact row */
         .bio-lists-row {
             display: flex;
@@ -308,34 +544,6 @@
             text-transform: uppercase;
             color: var(--muted);
             margin-top: 3px;
-        }
-
-        /* ── SCROLL CUE ── */
-        .scroll-cue {
-            position: absolute;
-            bottom: 32px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            color: var(--ink-muted);
-            font-size: 0.62rem;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            pointer-events: none;
-        }
-        .scroll-cue-line {
-            width: 1px;
-            height: 40px;
-            background: linear-gradient(to bottom, var(--ink-label), transparent);
-            animation: linePulse 2s ease-in-out infinite;
-        }
-        @keyframes linePulse {
-            0%,100% { opacity: 0.4; }
-            50% { opacity: 1; }
         }
 
         /* ── PROGRESS DOTS ── */
@@ -996,8 +1204,12 @@
                 <div class="diptych-bio">
                     <p class="info-eyebrow">Senior System Developer</p>
                     <h1 class="info-title">Tobias Eriksson</h1>
-                    <p class="info-year">Skövde, Sweden</p>
-                    <div class="info-rule"></div>
+                    <p class="info-year">Stockholm, Sweden</p>
+                    <div class="bio-tabs">
+                        <button class="bio-tab active" data-tab="about">About</button>
+                        <button class="bio-tab" data-tab="work">Work Experience</button>
+                    </div>
+                    <div class="bio-tab-panel active" id="bio-tab-about">
                     <p class="info-desc">I'm a fullstack web developer with six years of experience building and maintaining production-critical solutions — from React and Next.js on the frontend to Node-based services and databases on the backend. I care about performance, stability and operations, and I'm comfortable acting as first responder when production needs attention. These days I'm also leaning into modern AI tooling, building with the Claude API and Model Context Protocol, and I enjoy working across the full chain from architecture and development to client dialogue and delivery.</p>
                     <p class="info-desc">This site is a showcase of some of the projects I develop on my spare time, using new and cool frameworks and technologies I find interesting.</p>
                     <p class="info-desc">Skills</p>
@@ -1133,13 +1345,42 @@
                             <li><a href="https://github.com/Accapelo/Accapelo.github.io/tree/gh-pages" target="_blank" rel="noopener">Accapelo.github.io</a></li>
                         </ul>
                     </div>
+                    </div><!-- /bio-tab-about -->
+                    <div class="bio-tab-panel" id="bio-tab-work">
+                    <div class="work-tl-wrap">
+                        <div class="work-tl-row">
+                            <button class="work-tl-seg work-tl-seg--a active" data-proj="internship" title="Internship — Next Studios">
+                                <div class="work-seg-bar"></div>
+                                <span class="work-seg-name">Internship</span>
+                                <span class="work-seg-period">Jan – Mar '19</span>
+                            </button>
+                            <button class="work-tl-seg work-tl-seg--b" data-proj="ifairs" title="IFairs — Farsight Tech Nordic AB">
+                                <div class="work-seg-bar"></div>
+                                <span class="work-seg-name">IFairs</span>
+                                <span class="work-seg-period">Oct '20 – Jun '22</span>
+                            </button>
+                            <button class="work-tl-seg work-tl-seg--b" data-proj="provide" title="ProVide Server — Farsight Tech Nordic AB">
+                                <div class="work-seg-bar"></div>
+                                <span class="work-seg-name">ProVide Server</span>
+                                <span class="work-seg-period">Jun '22 – Mar '23</span>
+                            </button>
+                            <button class="work-tl-seg work-tl-seg--c" data-proj="riksbyggen" title="Riksbyggen — Consid">
+                                <div class="work-seg-bar"></div>
+                                <span class="work-seg-name">Riksbyggen</span>
+                                <span class="work-seg-period">Mar '23 – Apr '24</span>
+                            </button>
+                            <button class="work-tl-seg work-tl-seg--c" data-proj="oresund" title="Öresundsbron — Consid">
+                                <div class="work-seg-bar"></div>
+                                <span class="work-seg-name">Øresundsbron</span>
+                                <span class="work-seg-period">Apr '24 – Now</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="work-proj-detail" id="work-proj-detail"></div>
+                    </div><!-- /bio-tab-work -->
                 </div>
             </div>
         </div>
-    </div>
-    <div class="scroll-cue">
-        <span>Scroll</span>
-        <div class="scroll-cue-line"></div>
     </div>
 </div>
 </div><!-- /.artist-intro-wrapper -->
@@ -1233,7 +1474,7 @@
 
 
     <!-- Room 3: Portrait Scan -->
-    <div class="room-wrapper" data-idx="3">
+    <div class="room-wrapper" data-idx="3" id="room-photogrammetry">
         <div class="room-shell">
             <div class="room-body">
                 <div class="room-edge-l"></div>
@@ -1323,7 +1564,7 @@
 <footer>
     <div class="footer-logo">Accapelo.github.io</div>
     <p>Portfolio of Tobias Eriksson &mdash; Senior System Developer.</p>
-    <p style="margin-top:8px;opacity:0.45;">Skövde &nbsp;&middot;&nbsp; Sweden</p>
+    <p style="margin-top:8px;opacity:0.45;">Stockholm &nbsp;&middot;&nbsp; Sweden</p>
 </footer>
 
 <script>
@@ -1960,19 +2201,6 @@ wrappers.forEach(w => {
     if (shell) shellObserver.observe(shell);
 });
 
-// Scroll cue fade
-const scrollCue = document.querySelector('.scroll-cue');
-function updateScroll() {
-    if (scrollCue) scrollCue.style.opacity = clamp01(1 - window.scrollY / 120).toFixed(3);
-}
-let scrollTicking = false;
-window.addEventListener('scroll', () => {
-    if (!scrollTicking) {
-        requestAnimationFrame(() => { updateScroll(); scrollTicking = false; });
-        scrollTicking = true;
-    }
-}, { passive: true });
-updateScroll();
 
 // ─────────────────────────────────────────────
 // CODE TOGGLE
@@ -1988,6 +2216,124 @@ document.querySelectorAll('.code-toggle').forEach(btn => {
     });
 });
 
+document.querySelectorAll('.bio-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.bio-tab').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.bio-tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('bio-tab-' + btn.dataset.tab).classList.add('active');
+    });
+});
+
+(function () {
+    const PROJ_DATA = {
+        oresund: {
+            name: 'Öresundsbron',
+            award: 'Project of the Year 2024',
+            company: 'Consid',
+            period: 'Apr 2024 – Present',
+            tech: 'Next.js · Contentful · Redis · Node.js · Fastify · Zod · TanStack Query · Angular · Application Insights · TypeScript',
+            descHtml: `<p class="work-proj-desc">Öresundsbron is the project I've gone deepest and widest on, technically. It's genuinely fullstack work, and it earned Consid's Project of the Year for 2024 along the way. Øresundsbro Konsortiet runs two customer-facing sites, Öresundsbron itself and Öresundpay, and between the two of them I've had my hands in almost every layer of the stack.</p>
+<p class="work-proj-desc">The Öresundsbron site runs on Next.js with Contentful as the CMS behind all the content — texts, URLs, email templates, and everything else editors need to change without a deploy. Caching sits in Redis, and TanStack Query handles data fetching against our APIs on the client side. The backend is a set of containerized Node.js services built on Fastify, with Zod handling both the REST endpoint contracts and their validation — and because Zod schemas are just TypeScript, we reuse the exact same schemas on the frontend too, so the types describing what an endpoint accepts and returns never drift between the two sides. Öresundpay, by contrast, is an older, lighter Angular site, and part of the ongoing work is steadily migrating pieces of it over to Next.js while keeping it hooked into the same Contentful backbone, so content editors aren't managing two disconnected worlds.</p>
+<p class="work-proj-desc">When I took this project over, the site was in rough shape: near-weekly outages, and a Lighthouse score sitting around 30. Getting it to essentially flawless operation and a Lighthouse score over 90, in the space of a year, was the headline result — but the more interesting part is how we got there. We leaned on Contentful webhooks, Redis, and Next.js's revalidation model together to build something that's fully server-rendered and cached, so pages are fast by default, while still updating instantly the moment an editor publishes a change in Contentful. That combination — cached everything, invalidated nothing stale — is the kind of thing that's simple to state and genuinely hard to get right in practice.</p>
+<p class="work-proj-desc">Stability was the other half of the turnaround, and a lot of that came down to observability we simply didn't have at the start. Logging had been minimal to non-existent when we inherited the project; today nearly all functionality is properly logged through Application Insights, with alerting that flags anomalies before they become incidents, and I've acted as first responder for production more than once as a result. All of that logging is built to be GDPR compliant from the ground up — scrubbed of personal information before it's ever written — which matters a lot for a system handling toll payments and customer accounts.</p>
+<p class="work-proj-desc">Beyond the technical stack, I've owned the technical and architectural decisions for the site and led the requirements dialogue directly with the client, run code reviews, and helped set the technical standards the rest of the web team works against. On the backend side specifically, I've built and maintained the Node services integrating with the bridge's payment system and with a range of external toll and bridge companies for shared accounts and campaigns, and kept the legacy Öresundpay Angular app talking correctly to that same backend. We also make a point of listening closely to customer support about the issues that actually bother customers, which has driven work like an AI chatbot and expanded FAQ functionality aimed directly at the friction points support hears about most.</p>
+<p class="work-proj-desc">One of the more distinctive parts of this project is how far outside our own codebase the work extends. Øresundsbro Konsortiet cooperates with a whole network of other toll operators across Europe to make cross-border travel as seamless as possible, which means our data and structures have to stay in sync with systems we don't own or control. That's a different kind of hard problem than anything purely internal: it's not enough to keep our own state consistent, we also have to handle the case where a change lands on one side of a partnership and hasn't propagated to the other yet, and design for that gap rather than assume it away.</p>
+<p class="work-proj-desc">Öresundsbron has been, in a lot of ways, the project where everything I'd picked up before came together: frontend architecture, backend service design, caching and performance work, observability, client-facing ownership, and now, increasingly, coordination across organizational boundaries. It's still very much ongoing, and there's plenty left on the Öresundpay migration and the cross-border sync work to keep it that way for a while yet.</p>`,
+            tier: 'c',
+        },
+        riksbyggen: {
+            name: 'Riksbyggen',
+            award: '',
+            company: 'Consid',
+            period: 'Mar 2023 – Apr 2024',
+            tech: 'SharePoint · SPFx · React · Power Apps · Power Automate · REST API',
+            descHtml: `<p class="work-proj-desc">Riksbyggen was less about building one product and more about being the connective tissue between a whole set of managerial software the organization already relied on, while making sure the right employees, and only the right employees, could actually reach it. The project started the way I think most good internal platform work should start: not at a keyboard, but in meetings with the key people across the organization, working through what they actually needed until we had a requirements specification we could both stand behind. That upfront alignment mattered more here than on most projects, because everything we went on to build had to slot into an existing SharePoint environment rather than replace it.</p>
+<p class="work-proj-desc">Everything we shipped lived inside SharePoint, but how it got built underneath varied depending on where the data actually lived. When an app needed information that sat outside the Microsoft 365 ecosystem entirely, we built our own external REST API to bridge that gap, then surfaced it through an SPFx web part written in React and hosted directly in SharePoint. That pattern, external API in, React web part out, became our go-to whenever the data source wasn't something Microsoft's own tooling already understood. When the data was available natively within the Microsoft suite, though, we took a different route and leaned on Power Automate to handle the flows, pairing it with Power Apps so users could trigger and submit requests themselves without needing a developer in the loop for every change.</p>
+<p class="work-proj-desc">Underneath all of it sat a permissions system I built on top of carefully structured SharePoint groups, tied into Microsoft's identity and access management. That piece was less visible than the web parts or the Power Platform flows, but it was arguably the most important part of the whole project: every one of those integrations was only as trustworthy as the access control behind it, and making sure only the correct users could view or edit company data was a constant thread running through every decision we made, not an afterthought bolted on at the end.</p>
+<p class="work-proj-desc">Riksbyggen ended up being a good exercise in picking the right tool for the data rather than forcing every problem through the same pipeline, custom API and React where we needed control, low-code Power Platform where the plumbing already existed, and a consistent, identity-aware permissions layer holding the whole thing together regardless of which path a given integration took.</p>`,
+            tier: 'c',
+        },
+        ifairs: {
+            name: 'IFairs',
+            award: '',
+            company: 'Farsight Tech Nordic AB',
+            period: 'Oct 2020 – Jun 2022',
+            tech: 'React · Node.js · MySQL · SQL · Ant Media',
+            descHtml: `<p class="work-proj-desc">IFairs was born out of covid as a way for companies to run a fully digital trade fair, complete with branded booths, livestreaming, and a crowd of attendees who could actually see and hear each other. I owned the entire frontend, built in React, talking to a Node backend, and touched the backend myself with SQL functions wherever the frontend needed something new from the data layer.</p>
+<p class="work-proj-desc">The first big challenge wasn't really about streaming or crowds at all, it was branding. Every fair we hosted belonged to a different company, and every one of those companies wanted their booth to look and feel like their own site, not a template with their logo pasted on. In practice that meant the platform had to behave like a de facto CMS. We modeled everything a company could customize like images, fonts, colors, layout choices as data, and stored it in a MySQL database. The frontend would then look all of that up at build or render time and assemble a booth that was, from a branding standpoint, indistinguishable from something built bespoke. It was a good early lesson in how much of "customization" is really just disciplined data modeling dressed up as design flexibility.</p>
+<p class="work-proj-desc">The second challenge was the part that made IFairs actually feel like a fair rather than a glorified webpage: livestreaming. Every booth, tied to its own company URL, ran a live video stream, and we used Ant Media as the streaming service underneath it. But the harder problem sat on the audience side. Every attendee connecting to a stream could turn on their own camera and microphone and appear as an avatar inside the crowd, so a booth wasn't just one company broadcasting outward, it was a room full of real people, live, watching and talking together. Getting that to hold up was a genuine engineering fight on two fronts at once: performance, because you're now pushing and rendering many concurrent audio and video streams instead of one, and moderation, because any time you give a crowd live audio and video, you need a way to keep that crowd civil. By the time we were done, what we'd built functioned a lot like Zoom, just wrapped inside a branded, purpose-built trade fair experience instead of a generic meeting room.</p>
+<p class="work-proj-desc">Looking back, IFairs is probably the project that pushed me hardest on real-time, multi-user systems and on treating customization as a data problem rather than a code problem. Both lessons have stuck with me well past the pandemic that made the project necessary in the first place.</p>`,
+            tier: 'b',
+        },
+        provide: {
+            name: 'ProVide Server',
+            award: '',
+            company: 'Farsight Tech Nordic AB',
+            period: 'Jun 2022 – Mar 2023',
+            tech: 'JavaScript · jQuery · HTML · CSS · PHP · Delphi · Active Directory',
+            descHtml: `<p class="work-proj-desc">ProVide Server is best described as a lightweight, on-premise cousin of Google Drive, and my job was to maintain and modernize it. The existing frontend was built in a fairly old-school stack, JavaScript, jQuery, and HTML, talking to the server through PHP, and the work split into two halves that turned out to be tightly coupled: rebuilding the interface to feel like a modern file manager, and rewriting the Delphi backend underneath it so that interface could actually behave the way users expected.</p>
+<p class="work-proj-desc">The core problem, and honestly the most interesting one, was an information gap between the backend and the frontend. Every file and folder in ProVide had its access and permissions governed by Active Directory, but none of that context ever made it up to the UI. In practice, that meant the frontend had no idea whether a user could open, move, or delete something until the user actually tried and the server came back with an error. That's a rough experience for anyone using a file manager day to day, clicking delete only to be told after the fact that you never had permission in the first place isn't just annoying, it erodes trust in the tool. The same blind spot showed up with something as basic as folder sizes: for anything nested a few layers deep, the user would need to traverse down the folders to see their true size.</p>
+<p class="work-proj-desc">Fixing the experience meant I couldn't stay in the frontend layer at all. I went back into the Delphi backend and rewrote the logic so that permission state and things like computed folder sizes were resolved server-side and handed to the frontend upfront, rather than discovered reactively through failed actions. That let the new interface show the right actions as available or disabled before a user ever clicked them, and display accurate folder sizes without a separate round of guesswork for every nested directory. Only once that backend groundwork was in place did the frontend overhaul, restyled to feel much closer to the Google Drive experience users already knew from their personal lives — actually deliver on its promise. It was a good reminder that a UI can only be as honest as the data it's given, and sometimes the fastest path to a better frontend runs straight through the backend first.</p>`,
+            tier: 'b',
+        },
+        internship: {
+            name: 'Internship — Shanghai',
+            award: '',
+            company: 'Next Studios',
+            period: 'Jan 2019 – Mar 2019',
+            tech: 'Unity · FMOD · Game Development · C#',
+            descHtml: `<p class="work-proj-desc">Before I'd shipped a single line of production code professionally, I got a crash course in what it's like to build games inside one of the largest gaming organizations on the planet. During the final year of my degree, a few of us were invited to intern at Next Studios in Shanghai, a developer under the Tencent umbrella. It was my first real exposure to working on larger projects alongside Chinese colleagues, and to a business culture and organizational structure that was, in a lot of ways, completely different from what I'd known back in Sweden.</p>
+<p class="work-proj-desc">The internship wasn't just about sitting at a desk writing code, either, even though that was the core of it. Next Studios made a point of pulling us into the wider culture of the studio. We got to spend time in a full motion-capture studio watching how mocap actually gets produced, tried out <a href="#room-photogrammetry" class="proj-scroll-link">multi-camera photogrammetry rigs</a>, and were regularly invited to company dinners and parties. It was as much an education in how a major studio operates end to end as it was a technical placement.</p>
+<p class="work-proj-desc">On the technical side, our team worked in Unity with FMOD handling audio, building smaller game demos as a way to brainstorm and pressure-test concepts before anything got greenlit into a larger production. The project we landed on ended up being, in hindsight, a pretty striking coincidence: a game where players race through a Wipeout-style obstacle course, trying not to fall off and die along the way. If that premise sounds familiar, it's because it's essentially the pitch for Fall Guys, except we built ours in early 2019, before any trailer for the eventual Fall Guys release had even come out. Our version leaned harder into co-op than what Mediatonic later shipped, too. A number of our obstacles were designed so that a single player physically couldn't clear them alone; you needed teammates coordinating together to get past certain sections of the course.</p>
+<p class="work-proj-desc">Looking back, it's a fun footnote, arriving independently at a similar idea to a game that would go on to become a genuine phenomenon a year and a half later. But the bigger takeaway from those three months was everything that surrounded the code: learning to collaborate across a language and culture gap, seeing how a AAA-adjacent studio structures its teams and its process, and getting a firsthand look at production techniques like mocap and photogrammetry that I hadn't been anywhere near before. It set the tone for how I've approached new environments ever since, stay curious about the process, not just the deliverable. Below are some screenshots from the game during development with split screen co-op:</p>
+<div class="proj-screenshots">
+<img class="proj-thumb" src="images/game_screenshot1.png" alt="Game screenshot 1">
+<img class="proj-thumb" src="images/game_screenshot2.png" alt="Game screenshot 2">
+<img class="proj-thumb" src="images/game_screenshot3.png" alt="Game screenshot 3">
+</div>`,
+            tier: 'a',
+        },
+    };
+
+    const TIER_COLOR = {
+        a: 'rgba(180,130,60,0.45)',
+        b: 'rgba(180,130,60,0.72)',
+        c: 'rgba(201,169,110,0.92)',
+    };
+
+    const detailPanel = document.getElementById('work-proj-detail');
+
+    function renderProj(id) {
+        const p = PROJ_DATA[id];
+        if (!p) return;
+        detailPanel.classList.remove('is-empty');
+        detailPanel.style.setProperty('--proj-border', TIER_COLOR[p.tier]);
+        detailPanel.innerHTML =
+            '<div class="work-entry-head">' +
+            '<span class="work-co">' + p.company + '</span>' +
+            '<span class="work-period">' + p.period + '</span>' +
+            '</div>' +
+            '<div class="work-proj">' +
+            '<p class="work-proj-name">' + p.name +
+            (p.award ? ' <span class="work-award">' + p.award + '</span>' : '') +
+            '</p>' +
+            '<p class="work-proj-tech">' + p.tech + '</p>' +
+            (p.descHtml !== undefined ? p.descHtml : '<p class="work-proj-desc">' + p.desc + '</p>') +
+            '</div>';
+    }
+
+    document.querySelectorAll('.work-tl-seg[data-proj]').forEach(seg => {
+        seg.addEventListener('click', () => {
+            document.querySelectorAll('.work-tl-seg').forEach(s => s.classList.remove('active'));
+            seg.classList.add('active');
+            renderProj(seg.dataset.proj);
+        });
+    });
+
+    renderProj('internship');
+}());
+
 document.querySelectorAll('.cert-header, .cert-cat-header').forEach(btn => {
     btn.addEventListener('click', () => {
         const panel = document.getElementById(btn.dataset.certTarget);
@@ -1995,6 +2341,60 @@ document.querySelectorAll('.cert-header, .cert-cat-header').forEach(btn => {
         btn.classList.toggle('open', open);
     });
 });
+
+(function () {
+    const overlay = document.createElement('div');
+    overlay.className = 'lb-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.innerHTML =
+        '<button class="lb-close" aria-label="Close">&times;</button>' +
+        '<button class="lb-nav lb-prev" aria-label="Previous">&#8592;</button>' +
+        '<img class="lb-img" src="" alt="">' +
+        '<button class="lb-nav lb-next" aria-label="Next">&#8594;</button>';
+    document.body.appendChild(overlay);
+
+    const lbImg = overlay.querySelector('.lb-img');
+    let imgs = [], cur = 0;
+
+    function open(srcs, idx) {
+        imgs = srcs; cur = idx;
+        lbImg.src = imgs[cur];
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function close() {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    function go(d) { cur = (cur + d + imgs.length) % imgs.length; lbImg.src = imgs[cur]; }
+
+    overlay.querySelector('.lb-close').addEventListener('click', close);
+    overlay.querySelector('.lb-prev').addEventListener('click', () => go(-1));
+    overlay.querySelector('.lb-next').addEventListener('click', () => go(1));
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', e => {
+        if (!overlay.classList.contains('open')) return;
+        if (e.key === 'Escape') close();
+        if (e.key === 'ArrowLeft') go(-1);
+        if (e.key === 'ArrowRight') go(1);
+    });
+
+    document.addEventListener('click', e => {
+        const thumb = e.target.closest('.proj-thumb');
+        if (!thumb) return;
+        const all = [...thumb.closest('.proj-screenshots').querySelectorAll('.proj-thumb')];
+        open(all.map(t => t.src), all.indexOf(thumb));
+    });
+
+    document.addEventListener('click', e => {
+        const link = e.target.closest('.proj-scroll-link');
+        if (!link) return;
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+}());
 
 // ─────────────────────────────────────────────
 // RENDER LOOP — only draw visible canvases
