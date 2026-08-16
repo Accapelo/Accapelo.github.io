@@ -146,6 +146,47 @@
             color: var(--gold);
             border: 1px solid rgba(201,169,110,0.28);
             padding: 3px 7px;
+            cursor: help;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .bio-skill:hover { border-color: rgba(201,169,110,0.6); color: rgba(201,169,110,1); }
+
+        /* ── SKILL TOOLTIP ── */
+        .skill-tooltip {
+            position: fixed;
+            z-index: 8888;
+            background: rgba(12,9,5,0.97);
+            border: 1px solid rgba(201,169,110,0.3);
+            border-radius: 4px;
+            padding: 10px 13px;
+            width: 260px;
+            pointer-events: none;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.65);
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .skill-tooltip.visible { opacity: 1; }
+        .stt-head {
+            font-size: 0.52rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: rgba(201,169,110,0.55);
+            margin: 8px 0 3px;
+        }
+        .stt-head:first-child { margin-top: 0; }
+        .stt-item {
+            font-size: 0.66rem;
+            color: rgba(240,235,227,0.68);
+            line-height: 1.55;
+            padding-left: 9px;
+            position: relative;
+            margin-bottom: 2px;
+        }
+        .stt-item::before {
+            content: '–';
+            position: absolute;
+            left: 0;
+            color: rgba(201,169,110,0.38);
         }
 
         /* ── BIO TABS ── */
@@ -1214,20 +1255,22 @@
                     <p class="info-desc">This site is a showcase of some of the projects I develop on my spare time, using new and cool frameworks and technologies I find interesting.</p>
                     <p class="info-desc">Skills</p>
                     <div class="bio-skills">
-                        <span class="bio-skill">Typescript / Javascript</span>
-                        <span class="bio-skill">Next.js</span>
-                        <span class="bio-skill">React</span>
-                        <span class="bio-skill">Node.js</span>
-                        <span class="bio-skill">Redis</span>
-                        <span class="bio-skill">SQL</span>
-                        <span class="bio-skill">GraphQL</span>
-                        <span class="bio-skill">Azure DevOps</span>
-                        <span class="bio-skill">Contentful</span>
-                        <span class="bio-skill">Power Platform</span>
-                        <span class="bio-skill">SEO / WCAG / GDPR</span>
-                        <span class="bio-skill">AI / Claude</span>
-                        <span class="bio-skill">Java</span>
-                        <span class="bio-skill">C#</span>
+                        <span class="bio-skill" data-skill="ts-js">TypeScript / JavaScript</span>
+                        <span class="bio-skill" data-skill="nextjs">Next.js</span>
+                        <span class="bio-skill" data-skill="react">React</span>
+                        <span class="bio-skill" data-skill="nodejs">Node.js</span>
+                        <span class="bio-skill" data-skill="redis">Redis</span>
+                        <span class="bio-skill" data-skill="contentful">Contentful</span>
+                        <span class="bio-skill" data-skill="sharepoint">SharePoint / SPFx</span>
+                        <span class="bio-skill" data-skill="power-platform">Power Platform</span>
+                        <span class="bio-skill" data-skill="seo-wcag-gdpr">SEO / WCAG / GDPR</span>
+                        <span class="bio-skill" data-skill="ai-claude">AI / Claude API</span>
+                        <span class="bio-skill" data-skill="sql">SQL</span>
+                        <span class="bio-skill" data-skill="graphql">GraphQL</span>
+                        <span class="bio-skill" data-skill="azure">Azure / DevOps</span>
+                        <span class="bio-skill" data-skill="angular">Angular</span>
+                        <span class="bio-skill" data-skill="java">Java</span>
+                        <span class="bio-skill" data-skill="csharp">C#</span>
                     </div>
                     <div class="cert-tree">
                         <button class="cert-header" data-cert-target="cert-body-main">
@@ -2232,11 +2275,11 @@ document.querySelectorAll('.bio-tab').forEach(btn => {
             award: 'Project of the Year 2024',
             company: 'Consid',
             period: 'Apr 2024 – Present',
-            tech: 'Next.js · Contentful · Redis · Node.js · Fastify · Zod · TanStack Query · Angular · Application Insights · TypeScript',
+            tech: 'Next.js · Contentful · GraphQL · Redis · SQL · Node.js · Fastify · Zod · TanStack Query · Angular · Application Insights · TypeScript · AI',
             descHtml: `<p class="work-proj-desc">Öresundsbron is the project I've gone deepest and widest on, technically. It's genuinely fullstack work, and it earned Consid's Project of the Year for 2024 along the way. Øresundsbro Konsortiet runs two customer-facing sites, Öresundsbron itself and Öresundpay, and between the two of them I've had my hands in almost every layer of the stack.</p>
-<p class="work-proj-desc">The Öresundsbron site runs on Next.js with Contentful as the CMS behind all the content — texts, URLs, email templates, and everything else editors need to change without a deploy. Caching sits in Redis, and TanStack Query handles data fetching against our APIs on the client side. The backend is a set of containerized Node.js services built on Fastify, with Zod handling both the REST endpoint contracts and their validation — and because Zod schemas are just TypeScript, we reuse the exact same schemas on the frontend too, so the types describing what an endpoint accepts and returns never drift between the two sides. Öresundpay, by contrast, is an older, lighter Angular site, and part of the ongoing work is steadily migrating pieces of it over to Next.js while keeping it hooked into the same Contentful backbone, so content editors aren't managing two disconnected worlds.</p>
-<p class="work-proj-desc">When I took this project over, the site was in rough shape: near-weekly outages, and a Lighthouse score sitting around 30. Getting it to essentially flawless operation and a Lighthouse score over 90, in the space of a year, was the headline result — but the more interesting part is how we got there. We leaned on Contentful webhooks, Redis, and Next.js's revalidation model together to build something that's fully server-rendered and cached, so pages are fast by default, while still updating instantly the moment an editor publishes a change in Contentful. That combination — cached everything, invalidated nothing stale — is the kind of thing that's simple to state and genuinely hard to get right in practice.</p>
-<p class="work-proj-desc">Stability was the other half of the turnaround, and a lot of that came down to observability we simply didn't have at the start. Logging had been minimal to non-existent when we inherited the project; today nearly all functionality is properly logged through Application Insights, with alerting that flags anomalies before they become incidents, and I've acted as first responder for production more than once as a result. All of that logging is built to be GDPR compliant from the ground up — scrubbed of personal information before it's ever written — which matters a lot for a system handling toll payments and customer accounts.</p>
+<p class="work-proj-desc">The Öresundsbron site runs on Next.js with Contentful as the CMS behind all the content, texts, URLs, email templates, and everything else editors need to change without a deploy. Caching sits in Redis, and TanStack Query handles data fetching against our APIs on the client side. The backend is a set of containerized Node.js services built on Fastify, with Zod handling both the REST endpoint contracts and their validation, and because Zod schemas are just TypeScript, we reuse the exact same schemas on the frontend too, so the types describing what an endpoint accepts and returns never drift between the two sides. Öresundpay, by contrast, is an older, lighter Angular site, and part of the ongoing work is steadily migrating pieces of it over to Next.js while keeping it hooked into the same Contentful backbone, so content editors aren't managing two disconnected worlds.</p>
+<p class="work-proj-desc">When I took this project over, the site was in rough shape: near-weekly outages, and a Lighthouse score sitting around 30. Getting it to essentially flawless operation and a Lighthouse score over 90, in the space of a year, was the headline result, but the more interesting part is how we got there. We leaned on Contentful webhooks, Redis, and Next.js's revalidation model together to build something that's fully server-rendered and cached, so pages are fast by default, while still updating instantly the moment an editor publishes a change in Contentful. That combination, cached everything, invalidated nothing stale, is the kind of thing that's simple to state and genuinely hard to get right in practice.</p>
+<p class="work-proj-desc">Stability was the other half of the turnaround, and a lot of that came down to observability we simply didn't have at the start. Logging had been minimal to non-existent when we inherited the project; today nearly all functionality is properly logged through Application Insights, with alerting that flags anomalies before they become incidents, and I've acted as first responder for production more than once as a result. All of that logging is built to be GDPR compliant from the ground up, scrubbed of personal information before it's ever written, which matters a lot for a system handling toll payments and customer accounts.</p>
 <p class="work-proj-desc">Beyond the technical stack, I've owned the technical and architectural decisions for the site and led the requirements dialogue directly with the client, run code reviews, and helped set the technical standards the rest of the web team works against. On the backend side specifically, I've built and maintained the Node services integrating with the bridge's payment system and with a range of external toll and bridge companies for shared accounts and campaigns, and kept the legacy Öresundpay Angular app talking correctly to that same backend. We also make a point of listening closely to customer support about the issues that actually bother customers, which has driven work like an AI chatbot and expanded FAQ functionality aimed directly at the friction points support hears about most.</p>
 <p class="work-proj-desc">One of the more distinctive parts of this project is how far outside our own codebase the work extends. Øresundsbro Konsortiet cooperates with a whole network of other toll operators across Europe to make cross-border travel as seamless as possible, which means our data and structures have to stay in sync with systems we don't own or control. That's a different kind of hard problem than anything purely internal: it's not enough to keep our own state consistent, we also have to handle the case where a change lands on one side of a partnership and hasn't propagated to the other yet, and design for that gap rather than assume it away.</p>
 <p class="work-proj-desc">Öresundsbron has been, in a lot of ways, the project where everything I'd picked up before came together: frontend architecture, backend service design, caching and performance work, observability, client-facing ownership, and now, increasingly, coordination across organizational boundaries. It's still very much ongoing, and there's plenty left on the Öresundpay migration and the cross-border sync work to keep it that way for a while yet.</p>`,
@@ -2247,7 +2290,7 @@ document.querySelectorAll('.bio-tab').forEach(btn => {
             award: '',
             company: 'Consid',
             period: 'Mar 2023 – Apr 2024',
-            tech: 'SharePoint · SPFx · React · Power Apps · Power Automate · REST API',
+            tech: 'SharePoint · SPFx · React · TypeScript · C# · Power Apps · Power Automate · REST API',
             descHtml: `<p class="work-proj-desc">Riksbyggen was less about building one product and more about being the connective tissue between a whole set of managerial software the organization already relied on, while making sure the right employees, and only the right employees, could actually reach it. The project started the way I think most good internal platform work should start: not at a keyboard, but in meetings with the key people across the organization, working through what they actually needed until we had a requirements specification we could both stand behind. That upfront alignment mattered more here than on most projects, because everything we went on to build had to slot into an existing SharePoint environment rather than replace it.</p>
 <p class="work-proj-desc">Everything we shipped lived inside SharePoint, but how it got built underneath varied depending on where the data actually lived. When an app needed information that sat outside the Microsoft 365 ecosystem entirely, we built our own external REST API to bridge that gap, then surfaced it through an SPFx web part written in React and hosted directly in SharePoint. That pattern, external API in, React web part out, became our go-to whenever the data source wasn't something Microsoft's own tooling already understood. When the data was available natively within the Microsoft suite, though, we took a different route and leaned on Power Automate to handle the flows, pairing it with Power Apps so users could trigger and submit requests themselves without needing a developer in the loop for every change.</p>
 <p class="work-proj-desc">Underneath all of it sat a permissions system I built on top of carefully structured SharePoint groups, tied into Microsoft's identity and access management. That piece was less visible than the web parts or the Power Platform flows, but it was arguably the most important part of the whole project: every one of those integrations was only as trustworthy as the access control behind it, and making sure only the correct users could view or edit company data was a constant thread running through every decision we made, not an afterthought bolted on at the end.</p>
@@ -2341,6 +2384,181 @@ document.querySelectorAll('.cert-header, .cert-cat-header').forEach(btn => {
         btn.classList.toggle('open', open);
     });
 });
+
+(function () {
+    const SKILL_INFO = {
+        'ts-js': {
+            works: [
+                'Öresundsbron — TypeScript throughout; shared Zod schemas keep frontend & backend types in sync',
+                'Riksbyggen — TypeScript React SPFx web parts',
+                'IFairs — JavaScript React frontend with Node backend',
+                'ProVide Server — JavaScript with jQuery',
+            ],
+            certs: [],
+        },
+        'nextjs': {
+            works: [
+                'Öresundsbron — primary framework; server rendering, ISR and Contentful webhook revalidation',
+            ],
+            certs: [],
+        },
+        'react': {
+            works: [
+                'Öresundsbron — via Next.js',
+                'IFairs — full React frontend owning all UI and state',
+                'Riksbyggen — SPFx web parts built in React, connected to SharePoint APIs',
+            ],
+            certs: [],
+        },
+        'nodejs': {
+            works: [
+                'Öresundsbron — containerized Fastify services; payment system and external toll-company integrations',
+                'IFairs — Node backend, SQL functions on demand',
+            ],
+            certs: [
+                'Kubernetes for Developers — Consid',
+            ],
+        },
+        'redis': {
+            works: [
+                'Öresundsbron — caching layer; Contentful webhooks trigger cache invalidation so content updates propagate instantly',
+            ],
+            certs: [],
+        },
+        'contentful': {
+            works: [
+                'Öresundsbron — CMS for all content (texts, URLs, email templates); webhook-driven cache invalidation',
+            ],
+            certs: [],
+        },
+        'sharepoint': {
+            works: [
+                'Riksbyggen — SPFx web parts in React, identity-aware permissions system built on SharePoint groups',
+            ],
+            certs: [],
+        },
+        'power-platform': {
+            works: [
+                'Riksbyggen — Power Apps for user-facing forms and submissions; Power Automate flows for automated data processing',
+            ],
+            certs: [
+                'Power BI — Consid',
+            ],
+        },
+        'seo-wcag-gdpr': {
+            works: [
+                'Öresundsbron — Lighthouse score from 30 to 90+; GDPR-compliant logging (PII scrubbed before write) for a toll-payment system',
+            ],
+            certs: [
+                'WCAG for Developers — Consid',
+                'Digital Accessibility — Consid',
+            ],
+        },
+        'ai-claude': {
+            works: [
+                'Öresundsbron — AI chatbot integration for customer-facing FAQ and support deflection',
+                'This site — built entirely through Claude Code and the Claude API',
+            ],
+            certs: [
+                'Building with the Claude API — Anthropic',
+                'Introduction to Model Context Protocol — Anthropic',
+                'Model Context Protocol: Advanced Topics — Anthropic',
+                'Introduction to Subagents — Anthropic',
+                'Claude 101 / Claude Code 101 / Claude Code in Action — Anthropic',
+                'AI Fluency: Framework & Foundations — Anthropic',
+            ],
+        },
+        'sql': {
+            works: [
+                'Öresundsbron — SQL queries across multiple backend databases',
+                'IFairs — MySQL database; SQL functions written directly when the frontend needed new data-layer behaviour',
+                'ProVide Server — backend data queries for file state and permissions',
+            ],
+            certs: [],
+        },
+        'graphql': {
+            works: [
+                'Öresundsbron — all Contentful content fetched via the Contentful GraphQL API',
+            ],
+            certs: [],
+        },
+        'azure': {
+            works: [
+                'Öresundsbron — Application Insights for logging and alerting; hosts the production environment and maintains CI/CD pipelines in Azure DevOps; acts as first responder for production incidents',
+            ],
+            certs: [
+                'Microsoft Certified: Azure Fundamentals — Microsoft',
+            ],
+        },
+        'angular': {
+            works: [
+                'Öresundsbron — maintains Öresundpay legacy Angular site against the same backend; ongoing migration to Next.js',
+            ],
+            certs: [],
+        },
+        'java': {
+            works: [],
+            certs: [
+                'Oracle Certified Professional, Java SE 8 Programmer — Oracle',
+                'Oracle Certified Associate, Java SE 8 Programmer — Oracle',
+            ],
+        },
+        'csharp': {
+            works: [
+                'Riksbyggen — external REST APIs bridging data outside Microsoft 365 into SharePoint, built in C#',
+                'Internship (Next Studios) — Unity game development; Unity scripting is C#',
+            ],
+            certs: [],
+        },
+    };
+
+    const tip = document.createElement('div');
+    tip.className = 'skill-tooltip';
+    document.body.appendChild(tip);
+
+    let hoverTimer = null;
+
+    function showTip(el) {
+        const info = SKILL_INFO[el.dataset.skill];
+        if (!info || (!info.works.length && !info.certs.length)) return;
+
+        let html = '';
+        if (info.works.length) {
+            html += '<p class="stt-head">Work experience</p>';
+            info.works.forEach(w => { html += '<p class="stt-item">' + w + '</p>'; });
+        }
+        if (info.certs.length) {
+            html += '<p class="stt-head">Certifications</p>';
+            info.certs.forEach(c => { html += '<p class="stt-item">' + c + '</p>'; });
+        }
+        tip.innerHTML = html;
+
+        const r = el.getBoundingClientRect();
+        const spaceAbove = r.top;
+        const tipH = 200; // conservative estimate
+        if (spaceAbove > tipH + 12) {
+            tip.style.top = '';
+            tip.style.bottom = (window.innerHeight - r.top + 8) + 'px';
+        } else {
+            tip.style.bottom = '';
+            tip.style.top = (r.bottom + 8) + 'px';
+        }
+        tip.style.left = Math.min(r.left, window.innerWidth - 272) + 'px';
+        tip.classList.add('visible');
+    }
+
+    function hideTip() {
+        clearTimeout(hoverTimer);
+        tip.classList.remove('visible');
+    }
+
+    document.querySelectorAll('.bio-skill[data-skill]').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            hoverTimer = setTimeout(() => showTip(el), 1000);
+        });
+        el.addEventListener('mouseleave', hideTip);
+    });
+}());
 
 (function () {
     const overlay = document.createElement('div');
