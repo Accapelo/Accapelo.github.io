@@ -66,6 +66,7 @@
         .room-shell--intro {
             background: #1c1410 !important;
             overflow: visible;
+            padding-bottom: 64px;
         }
         .room-shell--intro .room-body {
             align-items: stretch;
@@ -610,6 +611,29 @@
         .dot.active {
             background: var(--gold);
             transform: scale(1.5);
+        }
+
+        /* ── GALLERY HEADER ── */
+        .gallery-header {
+            background: var(--card);
+            text-align: center;
+            padding: 72px 40px 56px;
+            border-top: 1px solid rgba(201,169,110,0.1);
+        }
+        .gallery-header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--gold);
+            letter-spacing: 0.04em;
+            margin-bottom: 16px;
+        }
+        .gallery-header-sub {
+            font-size: 0.78rem;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            max-width: 420px;
+            margin: 0 auto;
+            line-height: 1.8;
         }
 
         /* ── MUSEUM ROOM LAYOUT ── */
@@ -1430,6 +1454,12 @@
 
 <!-- PROGRESS DOTS -->
 <div class="progress-dots" id="dots"></div>
+
+<!-- GALLERY HEADER -->
+<div class="gallery-header">
+    <h2 class="gallery-header-title">Fun stuff</h2>
+    <p class="gallery-header-sub">Interactive experiments, creative code & things built for the joy of building them</p>
+</div>
 
 <!-- GALLERY ROOMS -->
 <main id="gallery">
@@ -2554,7 +2584,7 @@ document.querySelectorAll('.cert-header, .cert-cat-header').forEach(btn => {
 
     document.querySelectorAll('.bio-skill[data-skill]').forEach(el => {
         el.addEventListener('mouseenter', () => {
-            hoverTimer = setTimeout(() => showTip(el), 1000);
+            hoverTimer = setTimeout(() => showTip(el), 500);
         });
         el.addEventListener('mouseleave', hideTip);
     });
